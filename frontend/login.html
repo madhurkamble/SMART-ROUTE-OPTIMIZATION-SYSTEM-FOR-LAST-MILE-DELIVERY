@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Smart Route Optimization System</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="auth-wrapper">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="auth-logo">🚚</div>
+        <h1>Smart Route Optimizer</h1>
+        <p>Last-Mile Delivery Management System</p>
+      </div>
+
+      <!-- Alert Box -->
+      <div id="alertBox" class="alert alert-danger" role="alert"></div>
+
+      <!-- Login Form -->
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input 
+            type="email" 
+            id="email" 
+            class="form-control" 
+            placeholder="e.g. admin@lastmile.com" 
+            required 
+            autocomplete="email"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input 
+            type="password" 
+            id="password" 
+            class="form-control" 
+            placeholder="••••••••" 
+            required 
+            autocomplete="current-password"
+          >
+        </div>
+
+        <button type="submit" id="submitBtn" class="btn btn-primary btn-block">
+          <span>Sign In to System</span> &rarr;
+        </button>
+      </form>
+
+      <!-- Demo Accounts Helper for Quick Testing -->
+      <div class="demo-credentials">
+        <h3>Quick Demo Logins (Click to Autofill)</h3>
+        <div class="demo-btn-group">
+          <button type="button" class="btn btn-outline btn-sm btn-block" onclick="fillDemo('admin@lastmile.com', 'admin123')">
+            👔 Fleet Manager
+          </button>
+          <button type="button" class="btn btn-outline btn-sm btn-block" onclick="fillDemo('rahul@lastmile.com', 'driver123')">
+            🚚 Driver (Rahul)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script>
+    // Autofill demo helper
+    function fillDemo(email, password) {
+      document.getElementById('email').value = email;
+      document.getElementById('password').value = password;
+      clearAlert();
+    }
+
+    function showAlert(msg) {
+      const alertBox = document.getElementById('alertBox');
+      alertBox.textContent = msg;
+      alertBox.style.display = 'block';
+    }
+
+    function clearAlert() {
+      const alertBox = document.getElementById('alertBox');
+      alertBox.style.display = 'none';
+      alertBox.textContent = '';
+    }
+
+    // Handle form submit
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearAlert();
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const submitBtn = document.getElementById('submitBtn');
+
+      try {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Signing in...';
+
+        const result = await loginUser(email, password);
+
+        // Redirect based on role or to dashboard
+        if (result.user.role === 'admin') {
+          window.location.href = 'dashboard.html';
+        } else {
+          // Driver redirects to dashboard for Day 1 (Driver Panel is Day 5)
+          window.location.href = 'dashboard.html';
+        }
+      } catch (err) {
+        showAlert(err.message || 'Login failed. Please check credentials.');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span>Sign In to System</span> &rarr;';
+      }
+    });
+
+    // If already logged in, redirect straight to dashboard
+    if (getAuthToken()) {
+      window.location.href = 'dashboard.html';
+    }
+  </script>
+</body>
+</html>

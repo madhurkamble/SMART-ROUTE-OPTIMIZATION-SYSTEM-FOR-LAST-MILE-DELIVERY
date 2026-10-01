@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | Smart Route Optimization System</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand-icon">🚚</div>
+        <div class="sidebar-brand-title">
+          Smart Route
+          <span>Last-Mile Delivery</span>
+        </div>
+      </div>
+
+      <ul class="sidebar-menu">
+        <li class="sidebar-menu-label">Main Navigation</li>
+        <li class="sidebar-menu-item active">
+          <a href="dashboard.html">
+            <span>📊</span>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="sidebar-menu-item">
+          <a href="deliveries.html" title="Available in Day 2">
+            <span>📦</span>
+            <span>Deliveries</span>
+            <span class="menu-badge">Day 2</span>
+          </a>
+        </li>
+        <li class="sidebar-menu-item">
+          <a href="vehicles.html" title="Available in Day 2">
+            <span>🚚</span>
+            <span>Vehicles</span>
+            <span class="menu-badge">Day 2</span>
+          </a>
+        </li>
+        <li class="sidebar-menu-item">
+          <a href="route-planner.html" title="Available in Day 3 & 4">
+            <span>🗺️</span>
+            <span>Route Planner</span>
+            <span class="menu-badge">Day 3</span>
+          </a>
+        </li>
+
+        <li class="sidebar-menu-label">Operations</li>
+        <li class="sidebar-menu-item">
+          <a href="driver-panel.html" title="Available in Day 5">
+            <span>👤</span>
+            <span>Driver Panel</span>
+            <span class="menu-badge">Day 5</span>
+          </a>
+        </li>
+        <li class="sidebar-menu-item">
+          <a href="analytics.html" title="Available in Day 5">
+            <span>📈</span>
+            <span>Analytics</span>
+            <span class="menu-badge">Day 5</span>
+          </a>
+        </li>
+        <li class="sidebar-menu-item">
+          <a href="admin.html" title="Available in Day 6">
+            <span>⚙️</span>
+            <span>Admin / Fleet</span>
+            <span class="menu-badge">Day 6</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <p><strong>System MVP: Day 1 of 6</strong></p>
+        <p>Foundation & Auth Active</p>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="main-content">
+      <!-- TOP NAVIGATION BAR -->
+      <header class="top-nav">
+        <div class="nav-left">
+          <h1 class="page-title">Fleet Operations Dashboard</h1>
+        </div>
+
+        <div class="nav-right">
+          <div class="user-profile-badge">
+            <div class="user-avatar" id="userAvatar">A</div>
+            <div class="user-info-text">
+              <span class="user-name" id="userName">Fleet Admin</span>
+              <span class="user-role" id="userRole">Fleet Manager</span>
+            </div>
+          </div>
+          <button id="logoutBtn" class="btn btn-outline btn-sm">
+            <span>Logout</span> 🚪
+          </button>
+        </div>
+      </header>
+
+      <!-- CONTENT BODY -->
+      <div class="content-body">
+        <!-- WELCOME BANNER -->
+        <div style="background: linear-gradient(135deg, #1e3a8a, #2563eb); color: #fff; padding: 1.25rem 1.5rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; box-shadow: var(--shadow-sm);">
+          <h2 style="font-size: 1.3rem; margin-bottom: 0.35rem;">Welcome to Smart Route Optimization System 🚀</h2>
+          <p style="font-size: 0.9rem; opacity: 0.9;">
+            Day 1 Foundation initialized: Node.js/Express backend, MongoDB database connection, and role-based authentication are active.
+          </p>
+        </div>
+
+        <!-- KPI METRICS GRID -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-info">
+              <h4>Total Orders</h4>
+              <div class="kpi-value" id="statTotalDeliveries">12</div>
+              <div class="kpi-subtext">Active batches</div>
+            </div>
+            <div class="kpi-icon-wrap icon-blue">📦</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-info">
+              <h4>In Transit</h4>
+              <div class="kpi-value" id="statActiveDeliveries">4</div>
+              <div class="kpi-subtext">Out for delivery</div>
+            </div>
+            <div class="kpi-icon-wrap icon-amber">⚡</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-info">
+              <h4>Pending Orders</h4>
+              <div class="kpi-value" id="statPendingDeliveries">5</div>
+              <div class="kpi-subtext">Awaiting route assignment</div>
+            </div>
+            <div class="kpi-icon-wrap icon-purple">⏳</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-info">
+              <h4>Completed</h4>
+              <div class="kpi-value" id="statCompletedDeliveries">3</div>
+              <div class="kpi-subtext">Delivered on-time</div>
+            </div>
+            <div class="kpi-icon-wrap icon-emerald">✅</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-info">
+              <h4>Available Fleet</h4>
+              <div class="kpi-value"><span id="statAvailableVehicles">3</span> / <span id="statTotalVehicles">5</span></div>
+              <div class="kpi-subtext">Vehicles ready</div>
+            </div>
+            <div class="kpi-icon-wrap icon-blue">🚚</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-info">
+              <h4>Planned Route</h4>
+              <div class="kpi-value" id="statTotalDistance">48.6 km</div>
+              <div class="kpi-subtext">Optimized distance</div>
+            </div>
+            <div class="kpi-icon-wrap icon-emerald">📍</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-info">
+              <h4>Est. Fuel Expense</h4>
+              <div class="kpi-value" id="statFuelCost">₹245.50</div>
+              <div class="kpi-subtext">Calculated usage</div>
+            </div>
+            <div class="kpi-icon-wrap icon-amber">⛽</div>
+          </div>
+        </div>
+
+        <!-- RECENT DELIVERIES PREVIEW PANEL -->
+        <div class="panel">
+          <div class="panel-header">
+            <h3 class="panel-title">Active Delivery Stream Preview</h3>
+            <span class="badge badge-assigned">Live Dispatch Feed</span>
+          </div>
+          <div class="panel-body table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Destination Address</th>
+                  <th>Priority</th>
+                  <th>Assigned Driver</th>
+                  <th>Vehicle</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>#DEL-101</strong></td>
+                  <td>Hinjawadi Phase 1, High-Tech City, Pune</td>
+                  <td><span class="badge badge-urgent">Urgent</span></td>
+                  <td>Rahul Sharma</td>
+                  <td>Van 01 (MH12-AB-1234)</td>
+                  <td><span class="badge badge-active">Out for Delivery</span></td>
+                </tr>
+                <tr>
+                  <td><strong>#DEL-102</strong></td>
+                  <td>Viman Nagar Cybercity, Pune</td>
+                  <td><span class="badge badge-standard">Standard</span></td>
+                  <td>Amit Patil</td>
+                  <td>Bike 02 (MH12-CD-5678)</td>
+                  <td><span class="badge badge-assigned">Assigned</span></td>
+                </tr>
+                <tr>
+                  <td><strong>#DEL-103</strong></td>
+                  <td>Pune Railway Station Cargo Bay, Pune</td>
+                  <td><span class="badge badge-urgent">Urgent</span></td>
+                  <td>Rahul Sharma</td>
+                  <td>Van 01 (MH12-AB-1234)</td>
+                  <td><span class="badge badge-pending">Pending</span></td>
+                </tr>
+                <tr>
+                  <td><strong>#DEL-104</strong></td>
+                  <td>Kothrud Stand Road, Pune</td>
+                  <td><span class="badge badge-standard">Standard</span></td>
+                  <td>Pooja Verma</td>
+                  <td>Van 02 (MH14-EF-9012)</td>
+                  <td><span class="badge badge-completed">Completed</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- QUICK ACTIONS BAR -->
+        <div class="actions-bar">
+          <button class="btn btn-primary" onclick="alert('Deliveries CRUD management will be built in Day 2!')">
+            ➕ New Delivery (Day 2)
+          </button>
+          <button class="btn btn-outline" onclick="alert('Leaflet Map & Route Planner will be built in Day 3!')">
+            🗺️ Route Planner (Day 3)
+          </button>
+          <button class="btn btn-outline" onclick="alert('Analytics & KPIs will be built in Day 5!')">
+            📊 View Fleet KPIs (Day 5)
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
