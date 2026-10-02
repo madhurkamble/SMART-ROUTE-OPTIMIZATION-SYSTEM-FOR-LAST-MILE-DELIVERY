@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vehicles | Smart Route Optimization</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app-container">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand-icon">🚚</div>
+      <div class="sidebar-brand-title">Smart Route<span>Last-Mile Delivery</span></div>
+    </div>
+    <ul class="sidebar-menu">
+      <li class="sidebar-menu-label">Main Navigation</li>
+      <li class="sidebar-menu-item"><a href="dashboard.html"><span>📊</span><span>Dashboard</span></a></li>
+      <li class="sidebar-menu-item"><a href="deliveries.html"><span>📦</span><span>Deliveries</span></a></li>
+      <li class="sidebar-menu-item active"><a href="vehicles.html"><span>🚚</span><span>Vehicles</span></a></li>
+      <li class="sidebar-menu-item"><a href="route-planner.html"><span>🗺️</span><span>Route Planner</span></a></li>
+      <li class="sidebar-menu-label">Operations</li>
+      <li class="sidebar-menu-item"><a href="driver-panel.html"><span>👤</span><span>Driver Panel</span></a></li>
+      <li class="sidebar-menu-item"><a href="analytics.html"><span>📈</span><span>Analytics</span></a></li>
+      <li class="sidebar-menu-item"><a href="admin.html"><span>⚙️</span><span>Admin / Fleet</span></a></li>
+    </ul>
+    <div class="sidebar-footer"><p><strong>Day 2 — Vehicle Management</strong></p></div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <header class="top-nav">
+      <div class="nav-left">
+        <h1 class="page-title">🚐 Fleet Vehicles</h1>
+      </div>
+      <div class="nav-right">
+        <div class="user-profile-badge">
+          <div class="user-avatar" id="userAvatar">A</div>
+          <div class="user-info-text">
+            <span class="user-name" id="userName">Fleet Admin</span>
+            <span class="user-role" id="userRole">Fleet Manager</span>
+          </div>
+        </div>
+        <button id="logoutBtn" class="btn btn-outline btn-sm">Logout 🚪</button>
+      </div>
+    </header>
+
+    <div class="content-body">
+
+      <!-- STAT SUMMARY BAR -->
+      <div class="stat-bar" id="vehicleStatBar">
+        <div class="stat-bar-item"><span>🚐</span><span>Loading fleet data...</span></div>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="actions-bar">
+        <button class="btn btn-primary" onclick="openModal('addVehicleModal')">➕ Add Vehicle to Fleet</button>
+      </div>
+
+      <!-- VEHICLES TABLE -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3 class="panel-title">Fleet Vehicles <span id="vehicleCount" style="color:var(--text-muted); font-weight:400"></span></h3>
+        </div>
+        <div class="panel-body table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Reg. Number</th>
+                <th>Type</th>
+                <th>Fuel</th>
+                <th>Mileage</th>
+                <th>Load Cap.</th>
+                <th>Assigned Driver</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="vehiclesTableBody">
+              <tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text-muted)">Loading vehicles...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ADD VEHICLE MODAL -->
+<div id="addVehicleModal" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>➕ Add Vehicle to Fleet</h3>
+      <button class="modal-close" onclick="closeModal('addVehicleModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <form id="vehicleForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Registration Number *</label>
+            <input id="vehNumber" type="text" class="form-control" placeholder="e.g. MH12AB1234" required>
+          </div>
+          <div class="form-group">
+            <label>Vehicle Type *</label>
+            <select id="vehType" class="form-control" required>
+              <option value="">-- Select --</option>
+              <option value="bike">🏍️ Bike</option>
+              <option value="van">🚐 Van</option>
+              <option value="truck">🚛 Truck</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Fuel Type *</label>
+            <select id="vehFuel" class="form-control" required>
+              <option value="">-- Select --</option>
+              <option value="petrol">⛽ Petrol</option>
+              <option value="diesel">🛢️ Diesel</option>
+              <option value="electric">⚡ Electric</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Mileage (km/L) *</label>
+            <input id="vehMileage" type="number" step="0.1" min="1" class="form-control" placeholder="e.g. 16" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tank Capacity (L)</label>
+            <input id="vehTankCap" type="number" min="0" class="form-control" placeholder="e.g. 50" value="40">
+          </div>
+          <div class="form-group">
+            <label>Load Capacity (kg) *</label>
+            <input id="vehLoadCap" type="number" min="1" class="form-control" placeholder="e.g. 700" required>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('addVehicleModal')">Cancel</button>
+      <button id="submitVehicleBtn" class="btn btn-primary" onclick="document.getElementById('vehicleForm').requestSubmit()">Add Vehicle</button>
+    </div>
+  </div>
+</div>
+
+<!-- ASSIGN DRIVER MODAL -->
+<div id="assignDriverModal" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>👤 Assign Driver to <span id="assignVehicleLabel"></span></h3>
+      <button class="modal-close" onclick="closeModal('assignDriverModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <form id="assignDriverForm">
+        <div class="form-group">
+          <label>Select Driver *</label>
+          <select id="assignDriverSelect" class="form-control" required>
+            <option value="">-- Select Driver --</option>
+          </select>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('assignDriverModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="document.getElementById('assignDriverForm').requestSubmit()">Assign Driver</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
+
+<script src="js/auth.js"></script>
+<script src="js/vehicles.js"></script>
+<script>
+  // After vehicles load, update stat bar
+  document.addEventListener('DOMContentLoaded', async () => {
+    // Wait a moment for loadVehicles to complete via vehicles.js
+    setTimeout(() => {
+      const statBar = document.getElementById('vehicleStatBar');
+      if (!allVehiclesData || !statBar) return;
+      const available = allVehiclesData.filter(v => v.availability === 'available').length;
+      const inUse = allVehiclesData.filter(v => v.availability === 'in_use').length;
+      const maintenance = allVehiclesData.filter(v => v.availability === 'maintenance').length;
+      statBar.innerHTML = `
+        <div class="stat-bar-item"><span>🚐</span><span>Total: ${allVehiclesData.length}</span></div>
+        <div class="stat-bar-item"><span>✅</span><span>Available: ${available}</span></div>
+        <div class="stat-bar-item"><span>⚡</span><span>In Use: ${inUse}</span></div>
+        <div class="stat-bar-item"><span>🔧</span><span>Maintenance: ${maintenance}</span></div>
+      `;
+    }, 800);
+  });
+</script>
+</body>
+</html>

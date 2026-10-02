@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deliveries | Smart Route Optimization</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app-container">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand-icon">🚚</div>
+      <div class="sidebar-brand-title">Smart Route<span>Last-Mile Delivery</span></div>
+    </div>
+    <ul class="sidebar-menu">
+      <li class="sidebar-menu-label">Main Navigation</li>
+      <li class="sidebar-menu-item"><a href="dashboard.html"><span>📊</span><span>Dashboard</span></a></li>
+      <li class="sidebar-menu-item active"><a href="deliveries.html"><span>📦</span><span>Deliveries</span></a></li>
+      <li class="sidebar-menu-item"><a href="vehicles.html"><span>🚚</span><span>Vehicles</span></a></li>
+      <li class="sidebar-menu-item"><a href="route-planner.html"><span>🗺️</span><span>Route Planner</span></a></li>
+      <li class="sidebar-menu-label">Operations</li>
+      <li class="sidebar-menu-item"><a href="driver-panel.html"><span>👤</span><span>Driver Panel</span></a></li>
+      <li class="sidebar-menu-item"><a href="analytics.html"><span>📈</span><span>Analytics</span></a></li>
+      <li class="sidebar-menu-item"><a href="admin.html"><span>⚙️</span><span>Admin / Fleet</span></a></li>
+    </ul>
+    <div class="sidebar-footer"><p><strong>Day 2 — Deliveries Active</strong></p></div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <header class="top-nav">
+      <div class="nav-left">
+        <h1 class="page-title">📦 Delivery Orders</h1>
+      </div>
+      <div class="nav-right">
+        <div class="user-profile-badge">
+          <div class="user-avatar" id="userAvatar">A</div>
+          <div class="user-info-text">
+            <span class="user-name" id="userName">Fleet Admin</span>
+            <span class="user-role" id="userRole">Fleet Manager</span>
+          </div>
+        </div>
+        <button id="logoutBtn" class="btn btn-outline btn-sm">Logout 🚪</button>
+      </div>
+    </header>
+
+    <div class="content-body">
+      <!-- ACTIONS BAR -->
+      <div class="actions-bar">
+        <button class="btn btn-primary" onclick="openModal('addDeliveryModal')">➕ New Delivery Order</button>
+        <select id="statusFilter" class="form-control" style="width:auto; padding: 0.55rem 0.9rem;">
+          <option value="all">All Status</option>
+          <option value="pending">Pending</option>
+          <option value="assigned">Assigned</option>
+          <option value="out_for_delivery">Out for Delivery</option>
+          <option value="completed">Completed</option>
+          <option value="failed">Failed</option>
+        </select>
+      </div>
+
+      <!-- DELIVERIES TABLE -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3 class="panel-title">All Delivery Orders <span id="deliveryCount" style="color:var(--text-muted); font-weight:400"></span></h3>
+        </div>
+        <div class="panel-body table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Address</th>
+                <th>Priority</th>
+                <th>Assigned Driver</th>
+                <th>Vehicle</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="deliveriesTableBody">
+              <tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text-muted)">Loading deliveries...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ADD DELIVERY MODAL -->
+<div id="addDeliveryModal" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>➕ New Delivery Order</h3>
+      <button class="modal-close" onclick="closeModal('addDeliveryModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <form id="deliveryForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Customer Name *</label>
+            <input id="custName" type="text" class="form-control" placeholder="e.g. Ananya Desai" required>
+          </div>
+          <div class="form-group">
+            <label>Customer Phone *</label>
+            <input id="custPhone" type="text" class="form-control" placeholder="+91 90001 11111" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Delivery Address *</label>
+          <input id="deliveryAddr" type="text" class="form-control" placeholder="e.g. Hinjawadi Phase 1, IT Park, Pune 411057" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Latitude * <small style="color:var(--text-muted)">(Decimal)</small></label>
+            <input id="deliveryLat" type="number" step="any" class="form-control" placeholder="e.g. 18.5912" required>
+          </div>
+          <div class="form-group">
+            <label>Longitude * <small style="color:var(--text-muted)">(Decimal)</small></label>
+            <input id="deliveryLng" type="number" step="any" class="form-control" placeholder="e.g. 73.7389" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Priority</label>
+            <select id="priority" class="form-control">
+              <option value="standard">Standard</option>
+              <option value="urgent">Urgent</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Package Size</label>
+            <select id="pkgSize" class="form-control">
+              <option value="small">Small</option>
+              <option value="medium">Medium</option>
+              <option value="large">Large</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Time Window Start</label>
+            <input id="timeStart" type="time" class="form-control" value="09:00">
+          </div>
+          <div class="form-group">
+            <label>Time Window End</label>
+            <input id="timeEnd" type="time" class="form-control" value="18:00">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Package Weight (kg)</label>
+          <input id="pkgWeight" type="number" step="0.1" min="0.1" class="form-control" placeholder="e.g. 2.5" value="1">
+        </div>
+
+        <div class="form-group">
+          <label>Notes (Optional)</label>
+          <input id="notes" type="text" class="form-control" placeholder="e.g. Leave at reception">
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('addDeliveryModal')">Cancel</button>
+      <button id="submitDeliveryBtn" class="btn btn-primary" onclick="document.getElementById('deliveryForm').requestSubmit()">Add Delivery</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
+
+<script src="js/auth.js"></script>
+<script src="js/deliveries.js"></script>
+</body>
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Driver Panel | Smart Route Optimization</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app-container">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand-icon">🚚</div>
+      <div class="sidebar-brand-title">Smart Route<span>Last-Mile Delivery</span></div>
+    </div>
+    <ul class="sidebar-menu">
+      <li class="sidebar-menu-label">Main Navigation</li>
+      <li class="sidebar-menu-item"><a href="dashboard.html"><span>📊</span><span>Dashboard</span></a></li>
+      <li class="sidebar-menu-item"><a href="deliveries.html"><span>📦</span><span>Deliveries</span></a></li>
+      <li class="sidebar-menu-item"><a href="vehicles.html"><span>🚚</span><span>Vehicles</span></a></li>
+      <li class="sidebar-menu-item"><a href="route-planner.html"><span>🗺️</span><span>Route Planner</span></a></li>
+      <li class="sidebar-menu-label">Operations</li>
+      <li class="sidebar-menu-item active"><a href="driver-panel.html"><span>👤</span><span>Driver Panel</span></a></li>
+      <li class="sidebar-menu-item"><a href="analytics.html"><span>📈</span><span>Analytics</span></a></li>
+      <li class="sidebar-menu-item"><a href="admin.html"><span>⚙️</span><span>Admin / Fleet</span></a></li>
+    </ul>
+    <div class="sidebar-footer"><p><strong>Day 2 — Driver View</strong></p></div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <header class="top-nav">
+      <div class="nav-left">
+        <h1 class="page-title">👤 Driver Management</h1>
+      </div>
+      <div class="nav-right">
+        <div class="user-profile-badge">
+          <div class="user-avatar" id="userAvatar">A</div>
+          <div class="user-info-text">
+            <span class="user-name" id="userName">Fleet Admin</span>
+            <span class="user-role" id="userRole">Fleet Manager</span>
+          </div>
+        </div>
+        <button id="logoutBtn" class="btn btn-outline btn-sm">Logout 🚪</button>
+      </div>
+    </header>
+
+    <div class="content-body">
+      <!-- INFO NOTICE -->
+      <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:var(--radius-md); padding:1rem 1.25rem; margin-bottom:1.5rem;">
+        <strong>📘 Day 2 — Driver Roster</strong><br>
+        <span style="font-size:0.875rem; color:var(--text-muted)">
+          This page shows the driver roster and their assigned vehicles.
+          The full interactive Driver Panel (status updates, map, ETA view) will be built in <strong>Day 5</strong>.
+        </span>
+      </div>
+
+      <!-- STAT BAR -->
+      <div class="stat-bar" id="driverStatBar">
+        <div class="stat-bar-item"><span>👤</span><span>Loading...</span></div>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="actions-bar">
+        <button class="btn btn-primary" onclick="openModal('addDriverModal')">➕ Add Driver</button>
+      </div>
+
+      <!-- DRIVERS TABLE -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3 class="panel-title">Driver Roster <span id="driverCount" style="color:var(--text-muted); font-weight:400"></span></h3>
+        </div>
+        <div class="panel-body table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>License No.</th>
+                <th>Assigned Vehicle</th>
+                <th>Status</th>
+                <th>Deliveries</th>
+                <th>On-Time</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="driversTableBody">
+              <tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text-muted)">Loading drivers...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ADD DRIVER MODAL -->
+<div id="addDriverModal" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>➕ Add New Driver</h3>
+      <button class="modal-close" onclick="closeModal('addDriverModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <form id="driverForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input id="drvName" type="text" class="form-control" placeholder="e.g. Rahul Sharma" required>
+          </div>
+          <div class="form-group">
+            <label>Phone *</label>
+            <input id="drvPhone" type="text" class="form-control" placeholder="+91 91234 56789" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email Address *</label>
+          <input id="drvEmail" type="email" class="form-control" placeholder="e.g. rahul@lastmile.com" required>
+        </div>
+        <div class="form-group">
+          <label>License Number *</label>
+          <input id="drvLicense" type="text" class="form-control" placeholder="e.g. MH0120230010" required>
+        </div>
+        <div class="form-group">
+          <label>Availability</label>
+          <select id="drvAvailability" class="form-control">
+            <option value="available">✅ Available</option>
+            <option value="on_duty">⚡ On Duty</option>
+            <option value="off_duty">🔴 Off Duty</option>
+          </select>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('addDriverModal')">Cancel</button>
+      <button id="submitDriverBtn" class="btn btn-primary" onclick="document.getElementById('driverForm').requestSubmit()">Add Driver</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
+
+<script src="js/auth.js"></script>
+<script>
+  let allDriversList = [];
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    const user = requireAuth();
+    if (!user) return;
+
+    const el = id => document.getElementById(id);
+    if (el('userName')) el('userName').textContent = user.name;
+    if (el('userRole')) el('userRole').textContent = user.role === 'admin' ? 'Fleet Manager' : 'Driver';
+    if (el('userAvatar')) el('userAvatar').textContent = user.name.charAt(0).toUpperCase();
+    const logoutBtn = el('logoutBtn');
+    if (logoutBtn) logoutBtn.addEventListener('click', e => { e.preventDefault(); logout(); });
+
+    await loadDrivers();
+
+    const form = el('driverForm');
+    if (form) form.addEventListener('submit', handleAddDriver);
+  });
+
+  async function loadDrivers() {
+    try {
+      const res = await fetch('/api/drivers', { headers: { 'Authorization': `Bearer ${getAuthToken()}` } });
+      const result = await res.json();
+      if (result.success) {
+        allDriversList = result.data;
+        renderDriversTable();
+        updateStatBar();
+      }
+    } catch (err) {
+      showToast('Could not load drivers', 'error');
+    }
+  }
+
+  function renderDriversTable() {
+    const tbody = document.getElementById('driversTableBody');
+    if (!tbody) return;
+    document.getElementById('driverCount').textContent = `(${allDriversList.length})`;
+
+    if (allDriversList.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:2rem">No drivers in roster.</td></tr>`;
+      return;
+    }
+
+    const availClass = { available: 'completed', on_duty: 'active', off_duty: 'urgent' };
+    const availLabel = { available: '✅ Available', on_duty: '⚡ On Duty', off_duty: '🔴 Off Duty' };
+
+    tbody.innerHTML = allDriversList.map(d => `
+      <tr>
+        <td><strong>${d.name}</strong><br><small style="color:var(--text-muted)">${d.email}</small></td>
+        <td>${d.phone}</td>
+        <td>${d.licenseNumber}</td>
+        <td>${d.assignedVehicle ? d.assignedVehicle.vehicleNumber + ' (' + d.assignedVehicle.vehicleType + ')' : '<span style="color:var(--text-muted)">None</span>'}</td>
+        <td><span class="badge badge-${availClass[d.availability]}">${availLabel[d.availability]}</span></td>
+        <td>${d.completedDeliveries}</td>
+        <td>${d.onTimeDeliveries} <small style="color:var(--text-muted)">(${d.completedDeliveries > 0 ? Math.round(d.onTimeDeliveries/d.completedDeliveries*100) : 0}%)</small></td>
+        <td><button class="btn btn-outline btn-sm" onclick="deleteDriver('${d._id}')">🗑 Remove</button></td>
+      </tr>
+    `).join('');
+  }
+
+  function updateStatBar() {
+    const statBar = document.getElementById('driverStatBar');
+    if (!statBar || !allDriversList) return;
+    const available = allDriversList.filter(d => d.availability === 'available').length;
+    const onDuty = allDriversList.filter(d => d.availability === 'on_duty').length;
+    const offDuty = allDriversList.filter(d => d.availability === 'off_duty').length;
+    statBar.innerHTML = `
+      <div class="stat-bar-item"><span>👤</span><span>Total: ${allDriversList.length}</span></div>
+      <div class="stat-bar-item"><span>✅</span><span>Available: ${available}</span></div>
+      <div class="stat-bar-item"><span>⚡</span><span>On Duty: ${onDuty}</span></div>
+      <div class="stat-bar-item"><span>🔴</span><span>Off Duty: ${offDuty}</span></div>
+    `;
+  }
+
+  async function handleAddDriver(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitDriverBtn');
+    btn.disabled = true; btn.textContent = 'Adding...';
+
+    const data = {
+      name: document.getElementById('drvName').value.trim(),
+      phone: document.getElementById('drvPhone').value.trim(),
+      email: document.getElementById('drvEmail').value.trim(),
+      licenseNumber: document.getElementById('drvLicense').value.trim(),
+      availability: document.getElementById('drvAvailability').value
+    };
+
+    try {
+      const res = await fetch('/api/drivers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getAuthToken()}` },
+        body: JSON.stringify(data)
+      });
+      const result = await res.json();
+      if (result.success) {
+        showToast('Driver added successfully ✅', 'success');
+        document.getElementById('driverForm').reset();
+        closeModal('addDriverModal');
+        await loadDrivers();
+      } else {
+        showToast(result.message || 'Failed to add driver', 'error');
+      }
+    } catch (err) {
+      showToast('Network error', 'error');
+    } finally {
+      btn.disabled = false; btn.textContent = 'Add Driver';
+    }
+  }
+
+  async function deleteDriver(id) {
+    if (!confirm('Remove this driver from the roster?')) return;
+    try {
+      const res = await fetch(`/api/drivers/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${getAuthToken()}` } });
+      const result = await res.json();
+      if (result.success) {
+        showToast('Driver removed.', 'success');
+        await loadDrivers();
+      } else {
+        showToast(result.message || 'Delete failed', 'error');
+      }
+    } catch (err) {
+      showToast('Network error', 'error');
+    }
+  }
+
+  function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+  function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+  function showToast(msg, type = 'success') {
+    const toast = document.getElementById('toast');
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.className = `toast toast-${type} show`;
+    setTimeout(() => { toast.className = 'toast'; }, 3500);
+  }
+</script>
+</body>
+</html>
