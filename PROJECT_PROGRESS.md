@@ -13,47 +13,47 @@
 - [x] Tested & verified working locally
 
 ## Day 2 — Deliveries + Drivers + Vehicles Management ✅
-- [x] Delivery Mongoose model (Delivery.js) — all fields per spec
-- [x] Driver Mongoose model (Driver.js) — with performance counters
-- [x] Vehicle Mongoose model (Vehicle.js) — fuel, mileage, load capacity
+- [x] Delivery Mongoose model (Delivery.js)
+- [x] Driver Mongoose model (Driver.js)
+- [x] Vehicle Mongoose model (Vehicle.js)
 - [x] CRUD REST API for Deliveries (deliveryRoutes.js)
 - [x] CRUD REST API for Drivers (driverRoutes.js)
 - [x] CRUD REST API for Vehicles (vehicleRoutes.js)
-- [x] server.js updated — new routes mounted, realistic sample data seeded
-- [x] dashboardRoutes.js updated — live DB aggregation counts
-- [x] deliveries.html — table, filter by status, add-delivery modal
+- [x] server.js updated — routes mounted, realistic sample data seeded
+- [x] dashboardRoutes.js — live DB aggregation counts
+- [x] deliveries.html — table, status filter, add-delivery modal
 - [x] vehicles.html — fleet table, add vehicle modal, assign driver modal
-- [x] driver-panel.html — driver roster table, stat bar, add driver modal
-- [x] deliveries.js — fetch() CRUD for deliveries
-- [x] vehicles.js — fetch() CRUD + driver assignment for vehicles
-- [x] style.css updated — modal overlay, toast, form-row, stat-bar styles
-- [x] 4 drivers + 5 vehicles + 6 deliveries seeded as realistic sample data
+- [x] driver-panel.html — driver roster, stat bar, add driver modal
+- [x] deliveries.js + vehicles.js frontend fetch() modules
+- [x] style.css extended — modal, toast, form-row, stat-bar
 
-## Day 3 — Route Planner + Leaflet Map + Distance Calculation
-- [ ] Route Planner page with interactive Leaflet & OpenStreetMap
-- [ ] Haversine distance calculation utility
-- [ ] Multi-stop route visualization
-- [ ] Stop sequencing & coordinates plotting
-- [ ] distanceCalculator.js backend utility
-- [ ] routeRoutes.js (basic)
+## Day 3 — Route Planner + Leaflet Map + Distance Calculation ✅
+- [x] distanceCalculator.js — Haversine formula + total route distance + distance matrix
+- [x] routeRoutes.js — POST /api/routes/preview (Nearest Neighbor) + GET /api/routes/data
+- [x] server.js updated — /api/routes mounted
+- [x] route-planner.html — Leaflet map, 3-step planning form, algorithm info cards
+- [x] route.js — form → API → map rendering + route summary panel
+- [x] Leaflet + OpenStreetMap integrated (no API key)
+- [x] Numbered markers (red = urgent, blue = standard), dashed route polyline
+- [x] Basic Nearest Neighbor algorithm operational
 
 ## Day 4 — Smart Route Optimization Engine
-- [ ] Nearest Neighbor algorithm (routeOptimizer.js)
-- [ ] Traffic impact simulation (Low / Medium / High factors)
-- [ ] Fuel consumption & cost calculation (fuelCalculator.js)
-- [ ] Priority delivery handling & ETA calculator (etaCalculator.js)
-- [ ] Route recalculation feature
-- [ ] POST /api/routes/optimize
+- [ ] routeOptimizer.js — full Nearest Neighbor + priority weighting
+- [ ] fuelCalculator.js — fuel consumption & cost
+- [ ] etaCalculator.js — ETA with traffic factor
+- [ ] Traffic simulation (Low=1.0 / Medium=1.2 / High=1.5)
+- [ ] Route scoring formula
+- [ ] POST /api/routes/optimize (full)
 - [ ] POST /api/routes/:id/recalculate
+- [ ] Route Planner updated with traffic, fuel, ETA panels
 
 ## Day 5 — Driver Panel + Monitoring + Analytics
-- [ ] Dedicated Driver execution view (full driver-panel.html upgrade)
-- [ ] Status update flow: Pending → Out for Delivery → Completed/Failed
-- [ ] Delay/issue reporting
-- [ ] Fleet analytics, KPI metrics & charts (analytics.html)
+- [ ] Full driver-panel.html with route view, status updates, issue reporting
+- [ ] analytics.html — KPI charts & metrics
+- [ ] Dashboard live monitoring improvements
 
 ## Day 6 — Finalization + Documentation + Deployment
-- [ ] Fleet admin control page (admin.html)
-- [ ] Comprehensive README.md & docs/PRD.md
-- [ ] Real application screenshots
-- [ ] Deployment to cloud (Render / Netlify / Atlas)
+- [ ] admin.html — fleet control panel
+- [ ] README.md + docs/PRD.md
+- [ ] Screenshots folder
+- [ ] Deployment (Render + Netlify + MongoDB Atlas)

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Route Planner | Smart Route Optimization</title>
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Leaflet CSS — Free interactive map library, no API key needed -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+  <style>
+    /* Route Planner specific layout */
+    .planner-layout {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    .planner-sidebar {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .planner-sidebar-header {
+      padding: 1rem 1.25rem;
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: #fff;
+    }
+
+    .planner-sidebar-header h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+
+    .planner-sidebar-header p {
+      font-size: 0.8rem;
+      opacity: 0.85;
+    }
+
+    .planner-sidebar-body {
+      padding: 1.25rem;
+    }
+
+    #routeMap {
+      height: 480px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      z-index: 0;
+    }
+
+    /* Fix Leaflet emoji icon rendering */
+    .map-emoji-icon {
+      font-size: 22px;
+      line-height: 1;
+      text-align: center;
+    }
+
+    .delivery-checkbox-item:hover {
+      background: #f8fafc;
+    }
+
+    #routeResults {
+      display: none;
+    }
+
+    @media (max-width: 960px) {
+      .planner-layout {
+        grid-template-columns: 1fr;
+      }
+      #routeMap {
+        height: 340px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+
+  <!-- SIDEBAR NAV -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand-icon">🚚</div>
+      <div class="sidebar-brand-title">Smart Route<span>Last-Mile Delivery</span></div>
+    </div>
+    <ul class="sidebar-menu">
+      <li class="sidebar-menu-label">Main Navigation</li>
+      <li class="sidebar-menu-item"><a href="dashboard.html"><span>📊</span><span>Dashboard</span></a></li>
+      <li class="sidebar-menu-item"><a href="deliveries.html"><span>📦</span><span>Deliveries</span></a></li>
+      <li class="sidebar-menu-item"><a href="vehicles.html"><span>🚚</span><span>Vehicles</span></a></li>
+      <li class="sidebar-menu-item active"><a href="route-planner.html"><span>🗺️</span><span>Route Planner</span></a></li>
+      <li class="sidebar-menu-label">Operations</li>
+      <li class="sidebar-menu-item"><a href="driver-panel.html"><span>👤</span><span>Driver Panel</span></a></li>
+      <li class="sidebar-menu-item"><a href="analytics.html"><span>📈</span><span>Analytics</span></a></li>
+      <li class="sidebar-menu-item"><a href="admin.html"><span>⚙️</span><span>Admin / Fleet</span></a></li>
+    </ul>
+    <div class="sidebar-footer"><p><strong>Day 3 — Route Planner</strong></p></div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <header class="top-nav">
+      <div class="nav-left">
+        <h1 class="page-title">🗺️ Route Planner</h1>
+      </div>
+      <div class="nav-right">
+        <div class="user-profile-badge">
+          <div class="user-avatar" id="userAvatar">A</div>
+          <div class="user-info-text">
+            <span class="user-name" id="userName">Fleet Admin</span>
+            <span class="user-role" id="userRole">Fleet Manager</span>
+          </div>
+        </div>
+        <button id="logoutBtn" class="btn btn-outline btn-sm">Logout 🚪</button>
+      </div>
+    </header>
+
+    <div class="content-body">
+
+      <!-- Status message area -->
+      <div id="plannerStatus" style="display:none;"></div>
+
+      <!-- MAIN PLANNER LAYOUT: Sidebar (form) + Map -->
+      <div class="planner-layout">
+
+        <!-- LEFT: Planning Form -->
+        <div class="planner-sidebar">
+          <div class="planner-sidebar-header">
+            <h3>🗺️ Build Route Plan</h3>
+            <p>Select driver, vehicle & deliveries to optimize</p>
+          </div>
+
+          <div class="planner-sidebar-body">
+            <!-- Step 1: Driver -->
+            <div class="form-group">
+              <label style="font-size:0.8rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted); font-weight:700;">
+                Step 1 — Select Driver
+              </label>
+              <select id="selectDriver" class="form-control">
+                <option value="">Loading drivers...</option>
+              </select>
+            </div>
+
+            <!-- Step 2: Vehicle -->
+            <div class="form-group">
+              <label style="font-size:0.8rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted); font-weight:700;">
+                Step 2 — Select Vehicle
+              </label>
+              <select id="selectVehicle" class="form-control">
+                <option value="">Loading vehicles...</option>
+              </select>
+            </div>
+
+            <!-- Step 3: Deliveries -->
+            <div class="form-group">
+              <label style="font-size:0.8rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted); font-weight:700;">
+                Step 3 — Select Deliveries
+              </label>
+              <div id="deliveryList" style="max-height:300px; overflow-y:auto; padding-right:2px;">
+                <p style="color:var(--text-muted); font-size:0.875rem;">Loading...</p>
+              </div>
+            </div>
+
+            <!-- Algorithm info box -->
+            <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:var(--radius-sm); padding:0.75rem; margin-bottom:1.25rem; font-size:0.8rem; color:#166534;">
+              <strong>📐 Algorithm:</strong> Nearest Neighbor<br>
+              Starts at the driver's location and always picks the closest unvisited delivery next.
+            </div>
+
+            <!-- Generate button -->
+            <button id="generateRouteBtn" class="btn btn-primary btn-block" style="font-size:1rem; padding:0.85rem;">
+              🗺️ Generate Route
+            </button>
+          </div>
+        </div>
+
+        <!-- RIGHT: Map + Results -->
+        <div>
+          <!-- Leaflet Map -->
+          <div id="routeMap"></div>
+
+          <!-- Map legend -->
+          <div style="display:flex; gap:1rem; flex-wrap:wrap; margin-top:0.75rem; font-size:0.8rem; color:var(--text-muted);">
+            <span>🚚 Driver Start</span>
+            <span><span style="background:#dc2626;color:#fff;border-radius:50%;padding:1px 6px;font-weight:700">1</span> Urgent stop</span>
+            <span><span style="background:#2563eb;color:#fff;border-radius:50%;padding:1px 6px;font-weight:700">2</span> Standard stop</span>
+            <span style="border-left:3px dashed #2563eb;padding-left:8px;">Route line</span>
+          </div>
+
+          <!-- Route Results (shown after generation) -->
+          <div id="routeResults" style="margin-top:1.5rem;">
+            <div class="panel">
+              <div class="panel-header">
+                <h3 class="panel-title">📋 Optimized Route Summary</h3>
+                <span class="badge badge-completed">Generated</span>
+              </div>
+              <div class="panel-body" id="routeSummaryContent">
+                <!-- Filled by route.js -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end planner-layout -->
+
+      <!-- Info / explanation card at the bottom -->
+      <div class="panel" style="margin-top:1.5rem;">
+        <div class="panel-header">
+          <h3 class="panel-title">📘 How the Route Planner Works</h3>
+        </div>
+        <div class="panel-body">
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:1rem;">
+            <div style="padding:1rem; background:#eff6ff; border-radius:var(--radius-sm); border:1px solid #bfdbfe;">
+              <div style="font-size:1.5rem; margin-bottom:0.5rem;">📍</div>
+              <strong>Haversine Distance</strong>
+              <p style="font-size:0.82rem; color:var(--text-muted); margin-top:0.3rem;">
+                Calculates straight-line distance between two GPS coordinates accounting for Earth's curvature. Accurate for distances under ~1,000 km.
+              </p>
+            </div>
+            <div style="padding:1rem; background:#f0fdf4; border-radius:var(--radius-sm); border:1px solid #bbf7d0;">
+              <div style="font-size:1.5rem; margin-bottom:0.5rem;">🤖</div>
+              <strong>Nearest Neighbor Algorithm</strong>
+              <p style="font-size:0.82rem; color:var(--text-muted); margin-top:0.3rem;">
+                From the current position, always go to the closest unvisited delivery. Simple, fast, and gives good results for small fleets.
+              </p>
+            </div>
+            <div style="padding:1rem; background:#fffbeb; border-radius:var(--radius-sm); border:1px solid #fde68a;">
+              <div style="font-size:1.5rem; margin-bottom:0.5rem;">🗺️</div>
+              <strong>OpenStreetMap + Leaflet</strong>
+              <p style="font-size:0.82rem; color:var(--text-muted); margin-top:0.3rem;">
+                Free, open-source interactive maps. No API key required. Markers show delivery locations; dashed line shows the planned route.
+              </p>
+            </div>
+            <div style="padding:1rem; background:#faf5ff; border-radius:var(--radius-sm); border:1px solid #e9d5ff;">
+              <div style="font-size:1.5rem; margin-bottom:0.5rem;">⚡</div>
+              <strong>Coming in Day 4</strong>
+              <p style="font-size:0.82rem; color:var(--text-muted); margin-top:0.3rem;">
+                Traffic simulation, fuel cost estimation, ETA calculation, priority scoring, and route recalculation.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end content-body -->
+  </main>
+</div><!-- end app-container -->
+
+<!-- Leaflet JS — Free interactive map library (no API key needed) -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/route.js"></script>
+</body>
+</html>
