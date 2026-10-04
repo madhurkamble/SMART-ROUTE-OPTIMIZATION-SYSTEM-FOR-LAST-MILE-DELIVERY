@@ -37,15 +37,18 @@
 - [x] Numbered markers (red = urgent, blue = standard), dashed route polyline
 - [x] Basic Nearest Neighbor algorithm operational
 
-## Day 4 — Smart Route Optimization Engine
-- [ ] routeOptimizer.js — full Nearest Neighbor + priority weighting
-- [ ] fuelCalculator.js — fuel consumption & cost
-- [ ] etaCalculator.js — ETA with traffic factor
-- [ ] Traffic simulation (Low=1.0 / Medium=1.2 / High=1.5)
-- [ ] Route scoring formula
-- [ ] POST /api/routes/optimize (full)
-- [ ] POST /api/routes/:id/recalculate
-- [ ] Route Planner updated with traffic, fuel, ETA panels
+## Day 4 — Smart Route Optimization Engine ✅
+- [x] fuelCalculator.js — fuel consumption, customizable prices (petrol/diesel/EV), and per-delivery cost
+- [x] etaCalculator.js — simulated traffic factors (Low 1.0x, Medium 1.2x, High 1.5x), travel time, 5m service time, clock ETAs
+- [x] routeOptimizer.js — priority-aware Nearest Neighbor (40% discount for urgent stops) & multi-factor route scoring
+- [x] Route Mongoose model (Route.js) — persists sequenced stops, ETAs, fuel costs, traffic factors, and route scores
+- [x] POST /api/routes/optimize — persists optimized route, links driver/vehicle, sets deliveries to 'assigned'
+- [x] POST /api/routes/:id/recalculate — dynamically recalculates route when traffic shifts (Low/Med/High)
+- [x] GET /api/routes/:id & GET /api/routes — view saved route plans
+- [x] dashboardRoutes.js — aggregates live planned distance and fuel costs from database
+- [x] route-planner.html — upgraded with simulated traffic controls, fuel price config, dynamic recalculation bar, KPI cards
+- [x] route.js — upgraded with traffic level selection, recalculation flow, color-coded traffic map polyline, stop timeline
+- [x] Unit tested optimization engine with realistic Pune delivery coordinates
 
 ## Day 5 — Driver Panel + Monitoring + Analytics
 - [ ] Full driver-panel.html with route view, status updates, issue reporting
