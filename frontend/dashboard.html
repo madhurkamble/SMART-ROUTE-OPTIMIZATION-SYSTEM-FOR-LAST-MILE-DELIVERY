@@ -27,44 +27,39 @@
           </a>
         </li>
         <li class="sidebar-menu-item">
-          <a href="deliveries.html" title="Available in Day 2">
+          <a href="deliveries.html">
             <span>📦</span>
             <span>Deliveries</span>
-            <span class="menu-badge">Day 2</span>
           </a>
         </li>
         <li class="sidebar-menu-item">
-          <a href="vehicles.html" title="Available in Day 2">
+          <a href="vehicles.html">
             <span>🚚</span>
             <span>Vehicles</span>
-            <span class="menu-badge">Day 2</span>
           </a>
         </li>
         <li class="sidebar-menu-item">
-          <a href="route-planner.html" title="Available in Day 3 & 4">
+          <a href="route-planner.html">
             <span>🗺️</span>
             <span>Route Planner</span>
-            <span class="menu-badge">Day 3</span>
           </a>
         </li>
 
         <li class="sidebar-menu-label">Operations</li>
         <li class="sidebar-menu-item">
-          <a href="driver-panel.html" title="Available in Day 5">
+          <a href="driver-panel.html">
             <span>👤</span>
             <span>Driver Panel</span>
-            <span class="menu-badge">Day 5</span>
           </a>
         </li>
         <li class="sidebar-menu-item">
-          <a href="analytics.html" title="Available in Day 5">
+          <a href="analytics.html">
             <span>📈</span>
             <span>Analytics</span>
-            <span class="menu-badge">Day 5</span>
           </a>
         </li>
         <li class="sidebar-menu-item">
-          <a href="admin.html" title="Available in Day 6">
+          <a href="admin.html">
             <span>⚙️</span>
             <span>Admin / Fleet</span>
             <span class="menu-badge">Day 6</span>
@@ -73,8 +68,8 @@
       </ul>
 
       <div class="sidebar-footer">
-        <p><strong>System MVP: Day 1 of 6</strong></p>
-        <p>Foundation & Auth Active</p>
+        <p><strong>System MVP: Day 5 of 6</strong></p>
+        <p>Driver Panel & Analytics Active</p>
       </div>
     </aside>
 
@@ -104,10 +99,26 @@
       <div class="content-body">
         <!-- WELCOME BANNER -->
         <div style="background: linear-gradient(135deg, #1e3a8a, #2563eb); color: #fff; padding: 1.25rem 1.5rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; box-shadow: var(--shadow-sm);">
-          <h2 style="font-size: 1.3rem; margin-bottom: 0.35rem;">Welcome to Smart Route Optimization System 🚀</h2>
+          <h2 style="font-size: 1.3rem; margin-bottom: 0.35rem;">Fleet Operations Monitoring Center 🚀</h2>
           <p style="font-size: 0.9rem; opacity: 0.9;">
-            Day 1 Foundation initialized: Node.js/Express backend, MongoDB database connection, and role-based authentication are active.
+            Live dispatch stream, driver task tracking, route performance telemetry, and KPI analytics are now fully active.
           </p>
+        </div>
+
+        <!-- QUICK ACTIONS BAR -->
+        <div class="actions-bar" style="margin-bottom:1.5rem;">
+          <a href="deliveries.html" class="btn btn-primary">
+            ➕ New Delivery Order
+          </a>
+          <a href="route-planner.html" class="btn btn-outline">
+            🗺️ Optimize Route
+          </a>
+          <a href="driver-panel.html" class="btn btn-outline">
+            👤 Driver Dispatch Console
+          </a>
+          <a href="analytics.html" class="btn btn-outline">
+            📈 View Analytics & KPIs
+          </a>
         </div>
 
         <!-- KPI METRICS GRID -->
@@ -115,8 +126,8 @@
           <div class="kpi-card">
             <div class="kpi-info">
               <h4>Total Orders</h4>
-              <div class="kpi-value" id="statTotalDeliveries">12</div>
-              <div class="kpi-subtext">Active batches</div>
+              <div class="kpi-value" id="statTotalDeliveries">--</div>
+              <div class="kpi-subtext">Active database count</div>
             </div>
             <div class="kpi-icon-wrap icon-blue">📦</div>
           </div>
@@ -124,7 +135,7 @@
           <div class="kpi-card">
             <div class="kpi-info">
               <h4>In Transit</h4>
-              <div class="kpi-value" id="statActiveDeliveries">4</div>
+              <div class="kpi-value" id="statActiveDeliveries">--</div>
               <div class="kpi-subtext">Out for delivery</div>
             </div>
             <div class="kpi-icon-wrap icon-amber">⚡</div>
@@ -133,8 +144,8 @@
           <div class="kpi-card">
             <div class="kpi-info">
               <h4>Pending Orders</h4>
-              <div class="kpi-value" id="statPendingDeliveries">5</div>
-              <div class="kpi-subtext">Awaiting route assignment</div>
+              <div class="kpi-value" id="statPendingDeliveries">--</div>
+              <div class="kpi-subtext">Awaiting assignment</div>
             </div>
             <div class="kpi-icon-wrap icon-purple">⏳</div>
           </div>
@@ -142,7 +153,7 @@
           <div class="kpi-card">
             <div class="kpi-info">
               <h4>Completed</h4>
-              <div class="kpi-value" id="statCompletedDeliveries">3</div>
+              <div class="kpi-value" id="statCompletedDeliveries">--</div>
               <div class="kpi-subtext">Delivered on-time</div>
             </div>
             <div class="kpi-icon-wrap icon-emerald">✅</div>
@@ -151,7 +162,7 @@
           <div class="kpi-card">
             <div class="kpi-info">
               <h4>Available Fleet</h4>
-              <div class="kpi-value"><span id="statAvailableVehicles">3</span> / <span id="statTotalVehicles">5</span></div>
+              <div class="kpi-value"><span id="statAvailableVehicles">--</span> / <span id="statTotalVehicles">--</span></div>
               <div class="kpi-subtext">Vehicles ready</div>
             </div>
             <div class="kpi-icon-wrap icon-blue">🚚</div>
@@ -159,8 +170,8 @@
 
           <div class="kpi-card">
             <div class="kpi-info">
-              <h4>Planned Route</h4>
-              <div class="kpi-value" id="statTotalDistance">48.6 km</div>
+              <h4>Planned Distance</h4>
+              <div class="kpi-value" id="statTotalDistance">-- km</div>
               <div class="kpi-subtext">Optimized distance</div>
             </div>
             <div class="kpi-icon-wrap icon-emerald">📍</div>
@@ -169,81 +180,66 @@
           <div class="kpi-card">
             <div class="kpi-info">
               <h4>Est. Fuel Expense</h4>
-              <div class="kpi-value" id="statFuelCost">₹245.50</div>
+              <div class="kpi-value" id="statFuelCost">₹--</div>
               <div class="kpi-subtext">Calculated usage</div>
             </div>
             <div class="kpi-icon-wrap icon-amber">⛽</div>
           </div>
         </div>
 
-        <!-- RECENT DELIVERIES PREVIEW PANEL -->
-        <div class="panel">
-          <div class="panel-header">
-            <h3 class="panel-title">Active Delivery Stream Preview</h3>
-            <span class="badge badge-assigned">Live Dispatch Feed</span>
+        <!-- RECENT DELIVERIES & FLEET STATUS GRID -->
+        <div style="display:grid; grid-template-columns:2fr 1fr; gap:1.25rem; margin-bottom:1.5rem;">
+          <!-- LIVE DELIVERY STREAM PANEL -->
+          <div class="panel" style="margin-bottom:0;">
+            <div class="panel-header">
+              <h3 class="panel-title">Active Delivery Stream</h3>
+              <a href="deliveries.html" style="font-size:0.8rem; color:var(--primary); text-decoration:none; font-weight:600;">View All Orders &rarr;</a>
+            </div>
+            <div class="panel-body table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Customer & Address</th>
+                    <th>Priority</th>
+                    <th>Driver</th>
+                    <th>Vehicle</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboardDeliveriesTable">
+                  <tr><td colspan="6" style="text-align:center; padding:1.5rem; color:var(--text-muted)">Loading real-time stream...</td></tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-          <div class="panel-body table-responsive">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Order ID</th>
-                  <th>Destination Address</th>
-                  <th>Priority</th>
-                  <th>Assigned Driver</th>
-                  <th>Vehicle</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>#DEL-101</strong></td>
-                  <td>Hinjawadi Phase 1, High-Tech City, Pune</td>
-                  <td><span class="badge badge-urgent">Urgent</span></td>
-                  <td>Rahul Sharma</td>
-                  <td>Van 01 (MH12-AB-1234)</td>
-                  <td><span class="badge badge-active">Out for Delivery</span></td>
-                </tr>
-                <tr>
-                  <td><strong>#DEL-102</strong></td>
-                  <td>Viman Nagar Cybercity, Pune</td>
-                  <td><span class="badge badge-standard">Standard</span></td>
-                  <td>Amit Patil</td>
-                  <td>Bike 02 (MH12-CD-5678)</td>
-                  <td><span class="badge badge-assigned">Assigned</span></td>
-                </tr>
-                <tr>
-                  <td><strong>#DEL-103</strong></td>
-                  <td>Pune Railway Station Cargo Bay, Pune</td>
-                  <td><span class="badge badge-urgent">Urgent</span></td>
-                  <td>Rahul Sharma</td>
-                  <td>Van 01 (MH12-AB-1234)</td>
-                  <td><span class="badge badge-pending">Pending</span></td>
-                </tr>
-                <tr>
-                  <td><strong>#DEL-104</strong></td>
-                  <td>Kothrud Stand Road, Pune</td>
-                  <td><span class="badge badge-standard">Standard</span></td>
-                  <td>Pooja Verma</td>
-                  <td>Van 02 (MH14-EF-9012)</td>
-                  <td><span class="badge badge-completed">Completed</span></td>
-                </tr>
-              </tbody>
-            </table>
+
+          <!-- DRIVER & VEHICLE MONITORING SIDE PANEL -->
+          <div style="display:flex; flex-direction:column; gap:1.25rem;">
+            <!-- DRIVERS TELEMETRY -->
+            <div class="panel" style="margin-bottom:0;">
+              <div class="panel-header">
+                <h3 class="panel-title" style="font-size:0.95rem;">👤 Driver Status Monitoring</h3>
+                <a href="driver-panel.html" style="font-size:0.75rem; color:var(--primary); text-decoration:none;">View &rarr;</a>
+              </div>
+              <div class="panel-body" id="monitoringDriversList" style="padding:0.85rem;">
+                <p style="color:var(--text-muted); font-size:0.8rem;">Loading drivers...</p>
+              </div>
+            </div>
+
+            <!-- VEHICLES TELEMETRY -->
+            <div class="panel" style="margin-bottom:0;">
+              <div class="panel-header">
+                <h3 class="panel-title" style="font-size:0.95rem;">🚚 Vehicle Availability</h3>
+                <a href="vehicles.html" style="font-size:0.75rem; color:var(--primary); text-decoration:none;">Manage &rarr;</a>
+              </div>
+              <div class="panel-body" id="monitoringVehiclesList" style="padding:0.85rem;">
+                <p style="color:var(--text-muted); font-size:0.8rem;">Loading vehicles...</p>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- QUICK ACTIONS BAR -->
-        <div class="actions-bar">
-          <button class="btn btn-primary" onclick="alert('Deliveries CRUD management will be built in Day 2!')">
-            ➕ New Delivery (Day 2)
-          </button>
-          <button class="btn btn-outline" onclick="alert('Leaflet Map & Route Planner will be built in Day 3!')">
-            🗺️ Route Planner (Day 3)
-          </button>
-          <button class="btn btn-outline" onclick="alert('Analytics & KPIs will be built in Day 5!')">
-            📊 View Fleet KPIs (Day 5)
-          </button>
-        </div>
       </div>
     </main>
   </div>

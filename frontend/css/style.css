@@ -709,3 +709,22 @@ select.form-control { appearance: auto; }
 
 .stat-bar-item span:first-child { font-size: 1.4rem; }
 
+/* ========================================================
+   LEAFLET MAP & TILE RENDERING FIXES
+======================================================== */
+.leaflet-container {
+  background: #f1f5f9 !important;
+}
+
+.leaflet-container img.leaflet-tile {
+  max-width: none !important;
+  max-height: none !important;
+  width: 256px !important;
+  height: 256px !important;
+}
+
+.leaflet-tile {
+  visibility: inherit !important;
+}
+
+

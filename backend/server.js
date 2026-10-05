@@ -32,6 +32,7 @@ app.use('/api/deliveries', require('./routes/deliveryRoutes'));
 app.use('/api/drivers', require('./routes/driverRoutes'));
 app.use('/api/vehicles', require('./routes/vehicleRoutes'));
 app.use('/api/routes', require('./routes/routeRoutes'));
+app.use('/api/analytics', require('./routes/analyticsRoutes'));
 
 // Root → login page
 app.get('/', (req, res) => {

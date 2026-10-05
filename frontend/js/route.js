@@ -51,11 +51,45 @@ function setUserInfo(user) {
 }
 
 function initMap() {
-  map = L.map('routeMap').setView([18.5204, 73.8567], 12);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  map = L.map('routeMap', {
+    zoomControl: true,
+    attributionControl: true
+  }).setView([18.5204, 73.8567], 12);
+
+  // Reliable OpenStreetMap tile layer with subdomains & buffer
+  const tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors',
-    maxZoom: 19
+    maxZoom: 19,
+    subdomains: ['a', 'b', 'c'],
+    keepBuffer: 6,
+    updateWhenIdle: false,
+    updateWhenZooming: true
   }).addTo(map);
+
+  // Automatically retry failed/dropped tiles so grey boxes never remain
+  tileLayer.on('tileerror', function(error) {
+    if (error && error.tile) {
+      setTimeout(() => {
+        const src = error.tile.src;
+        if (!src.includes('&retry=1')) {
+          error.tile.src = src + (src.includes('?') ? '&' : '?') + 'retry=1';
+        }
+      }, 800);
+    }
+  });
+
+  // Re-calculate size after initial layout render
+  setTimeout(() => {
+    if (map) map.invalidateSize();
+  }, 200);
+
+  setTimeout(() => {
+    if (map) map.invalidateSize();
+  }, 600);
+
+  window.addEventListener('resize', () => {
+    if (map) map.invalidateSize();
+  });
 }
 
 function clearMapLayers() {

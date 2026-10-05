@@ -5,6 +5,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Driver Panel | Smart Route Optimization</title>
   <link rel="stylesheet" href="css/style.css">
+
+  <!-- Leaflet CSS for driver route map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+  <style>
+    .driver-run-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    #driverRouteMap {
+      height: 380px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      margin-bottom: 1.25rem;
+      z-index: 0;
+    }
+
+    .tab-bar {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .driver-meta-card {
+      background: #fff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    @media (max-width: 960px) {
+      .driver-run-layout {
+        grid-template-columns: 1fr;
+      }
+      #driverRouteMap {
+        height: 280px;
+      }
+    }
+  </style>
 </head>
 <body>
 <div class="app-container">
@@ -26,21 +69,24 @@
       <li class="sidebar-menu-item"><a href="analytics.html"><span>📈</span><span>Analytics</span></a></li>
       <li class="sidebar-menu-item"><a href="admin.html"><span>⚙️</span><span>Admin / Fleet</span></a></li>
     </ul>
-    <div class="sidebar-footer"><p><strong>Day 2 — Driver View</strong></p></div>
+    <div class="sidebar-footer">
+      <p><strong>Day 5 — Operations Live</strong></p>
+      <p>Execution & Monitoring Active</p>
+    </div>
   </aside>
 
   <!-- MAIN CONTENT -->
   <main class="main-content">
     <header class="top-nav">
       <div class="nav-left">
-        <h1 class="page-title">👤 Driver Management</h1>
+        <h1 class="page-title">🚚 Driver Dispatch & Execution Panel</h1>
       </div>
       <div class="nav-right">
         <div class="user-profile-badge">
-          <div class="user-avatar" id="userAvatar">A</div>
+          <div class="user-avatar" id="userAvatar">D</div>
           <div class="user-info-text">
-            <span class="user-name" id="userName">Fleet Admin</span>
-            <span class="user-role" id="userRole">Fleet Manager</span>
+            <span class="user-name" id="userName">Rahul Sharma</span>
+            <span class="user-role" id="userRole">Driver</span>
           </div>
         </div>
         <button id="logoutBtn" class="btn btn-outline btn-sm">Logout 🚪</button>
@@ -48,55 +94,175 @@
     </header>
 
     <div class="content-body">
-      <!-- INFO NOTICE -->
-      <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:var(--radius-md); padding:1rem 1.25rem; margin-bottom:1.5rem;">
-        <strong>📘 Day 2 — Driver Roster</strong><br>
-        <span style="font-size:0.875rem; color:var(--text-muted)">
-          This page shows the driver roster and their assigned vehicles.
-          The full interactive Driver Panel (status updates, map, ETA view) will be built in <strong>Day 5</strong>.
-        </span>
+
+      <!-- TOP TAB BAR -->
+      <div class="tab-bar">
+        <button id="tabExecution" class="btn btn-primary btn-sm">
+          🚚 Active Delivery Run (Live Dispatch)
+        </button>
+        <button id="tabRoster" class="btn btn-outline btn-sm">
+          👥 Fleet Driver Roster
+        </button>
       </div>
 
-      <!-- STAT BAR -->
-      <div class="stat-bar" id="driverStatBar">
-        <div class="stat-bar-item"><span>👤</span><span>Loading...</span></div>
-      </div>
+      <!-- VIEW 1: ACTIVE DRIVER EXECUTION -->
+      <div id="viewExecution">
+        <!-- DRIVER CONTEXT BAR -->
+        <div class="driver-meta-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+            <div>
+              <span style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted); font-weight:700;">
+                Active Driver Profile
+              </span>
+              <h2 style="font-size:1.25rem; font-weight:700;" id="activeDriverName">Rahul Sharma</h2>
+              <div style="font-size:0.85rem; color:var(--text-muted);">
+                Vehicle: <strong id="activeDriverVehicle">Van 01 (MH12-AB-1234)</strong> &bull; Route: <strong id="activeRouteId">ACTIVE-DISPATCH</strong>
+              </div>
+            </div>
 
-      <!-- ACTIONS -->
-      <div class="actions-bar">
-        <button class="btn btn-primary" onclick="openModal('addDriverModal')">➕ Add Driver</button>
-      </div>
+            <!-- DRIVER SWITCHER -->
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <label style="font-size:0.8rem; font-weight:600; color:var(--text-muted);">Switch Driver:</label>
+              <select id="driverSwitcherSelect" class="form-control" style="width:auto; padding:0.4rem 0.75rem; font-size:0.85rem;">
+                <!-- Populated by driver.js -->
+              </select>
+            </div>
+          </div>
 
-      <!-- DRIVERS TABLE -->
-      <div class="panel">
-        <div class="panel-header">
-          <h3 class="panel-title">Driver Roster <span id="driverCount" style="color:var(--text-muted); font-weight:400"></span></h3>
+          <!-- KPI MINI CARDS -->
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:0.75rem; margin-top:1rem;">
+            <div style="padding:0.65rem 0.85rem; background:#f8fafc; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+              <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase;">Route Progress</div>
+              <div style="font-size:1.1rem; font-weight:700; color:var(--primary);" id="activeRouteStopsProgress">0 / 0 Completed</div>
+            </div>
+            <div style="padding:0.65rem 0.85rem; background:#f8fafc; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+              <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase;">Planned Distance</div>
+              <div style="font-size:1.1rem; font-weight:700;" id="activeRouteDistance">0 km</div>
+            </div>
+            <div style="padding:0.65rem 0.85rem; background:#f8fafc; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+              <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase;">Next Stop ETA</div>
+              <div style="font-size:1.1rem; font-weight:700; color:var(--warning);" id="activeRouteETA">TBD</div>
+            </div>
+          </div>
         </div>
-        <div class="panel-body table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>License No.</th>
-                <th>Assigned Vehicle</th>
-                <th>Status</th>
-                <th>Deliveries</th>
-                <th>On-Time</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="driversTableBody">
-              <tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text-muted)">Loading drivers...</td></tr>
-            </tbody>
-          </table>
+
+        <!-- EMPTY STATE (IF NO ROUTE ASSIGNED) -->
+        <div id="driverEmptyRoute" style="display:none; text-align:center; padding:3rem; background:#fff; border-radius:var(--radius-md); border:1px dashed var(--border-color);">
+          <div style="font-size:2.5rem; margin-bottom:0.75rem;">📦</div>
+          <h3>No Active Delivery Route Assigned</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-top:0.35rem;">
+            This driver currently has no pending dispatched orders. Head to the <a href="route-planner.html" style="color:var(--primary);">Route Planner</a> to create and dispatch a route.
+          </p>
+        </div>
+
+        <!-- DETAILS VIEW: MAP & STOPS -->
+        <div id="driverActiveRouteDetails" class="driver-run-layout">
+          <!-- LEFT: Map + Instructions -->
+          <div>
+            <div class="panel">
+              <div class="panel-header">
+                <h3 class="panel-title">🗺️ Live Navigation & Stop Map</h3>
+                <span class="badge badge-assigned">Live GPS Sim</span>
+              </div>
+              <div class="panel-body" style="padding:1rem;">
+                <div id="driverRouteMap"></div>
+                <div style="display:flex; gap:1rem; font-size:0.78rem; color:var(--text-muted); flex-wrap:wrap;">
+                  <span>🟢 Completed</span>
+                  <span>🔵 Standard Stop</span>
+                  <span>🔴 Urgent Priority</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: Stop Execution Cards -->
+          <div>
+            <h3 style="font-size:1rem; font-weight:700; margin-bottom:0.75rem;">
+              📋 Delivery Stop Tasks
+            </h3>
+            <div id="driverStopsContainer">
+              <!-- Dynamically populated by driver.js -->
+            </div>
+          </div>
         </div>
       </div>
+
+      <!-- VIEW 2: DRIVER ROSTER (Preserved from Day 2) -->
+      <div id="viewRoster" style="display:none;">
+        <div class="stat-bar" id="driverStatBar">
+          <div class="stat-bar-item"><span>👤</span><span>Loading roster...</span></div>
+        </div>
+
+        <div class="actions-bar">
+          <button class="btn btn-primary" onclick="openModal('addDriverModal')">➕ Add Driver</button>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <h3 class="panel-title">Fleet Driver Roster <span id="driverCount" style="color:var(--text-muted); font-weight:400"></span></h3>
+          </div>
+          <div class="panel-body table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Phone</th>
+                  <th>License No.</th>
+                  <th>Assigned Vehicle</th>
+                  <th>Status</th>
+                  <th>Deliveries</th>
+                  <th>On-Time</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="driversTableBody">
+                <tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text-muted)">Loading drivers...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
     </div>
   </main>
 </div>
 
-<!-- ADD DRIVER MODAL -->
+<!-- REPORT ISSUE MODAL -->
+<div id="reportIssueModal" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>⚠️ Report Delivery Issue — <span id="issueOrderIdLabel"></span></h3>
+      <button class="modal-close" onclick="closeModal('reportIssueModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <form id="reportIssueForm">
+        <div class="form-group">
+          <label>Issue Type *</label>
+          <select id="issueTypeSelect" class="form-control" required>
+            <option value="traffic">🚦 Heavy Traffic Delay</option>
+            <option value="vehicle_problem">🔧 Vehicle Problem / Breakdown</option>
+            <option value="customer_unavailable">🏠 Customer Unavailable at Address</option>
+            <option value="wrong_address">📍 Incorrect / Incomplete Address</option>
+            <option value="weather">🌧️ Adverse Weather Condition</option>
+            <option value="other">⚠️ Other Logistics Delay</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Details / Description (Optional)</label>
+          <textarea id="issueDescriptionText" class="form-control" rows="3" placeholder="e.g. Road construction diversion, delayed by 15 mins."></textarea>
+        </div>
+
+        <div class="modal-footer" style="padding-right:0; padding-left:0; margin-bottom:-1rem;">
+          <button type="button" class="btn btn-outline" onclick="closeModal('reportIssueModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary" style="background:var(--danger);">Submit Issue Report</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ADD DRIVER MODAL (Preserved from Day 2) -->
 <div id="addDriverModal" class="modal-overlay">
   <div class="modal-box">
     <div class="modal-header">
@@ -140,146 +306,11 @@
   </div>
 </div>
 
-<!-- TOAST -->
 <div id="toast" class="toast"></div>
 
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="js/auth.js"></script>
-<script>
-  let allDriversList = [];
-
-  document.addEventListener('DOMContentLoaded', async () => {
-    const user = requireAuth();
-    if (!user) return;
-
-    const el = id => document.getElementById(id);
-    if (el('userName')) el('userName').textContent = user.name;
-    if (el('userRole')) el('userRole').textContent = user.role === 'admin' ? 'Fleet Manager' : 'Driver';
-    if (el('userAvatar')) el('userAvatar').textContent = user.name.charAt(0).toUpperCase();
-    const logoutBtn = el('logoutBtn');
-    if (logoutBtn) logoutBtn.addEventListener('click', e => { e.preventDefault(); logout(); });
-
-    await loadDrivers();
-
-    const form = el('driverForm');
-    if (form) form.addEventListener('submit', handleAddDriver);
-  });
-
-  async function loadDrivers() {
-    try {
-      const res = await fetch('/api/drivers', { headers: { 'Authorization': `Bearer ${getAuthToken()}` } });
-      const result = await res.json();
-      if (result.success) {
-        allDriversList = result.data;
-        renderDriversTable();
-        updateStatBar();
-      }
-    } catch (err) {
-      showToast('Could not load drivers', 'error');
-    }
-  }
-
-  function renderDriversTable() {
-    const tbody = document.getElementById('driversTableBody');
-    if (!tbody) return;
-    document.getElementById('driverCount').textContent = `(${allDriversList.length})`;
-
-    if (allDriversList.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:2rem">No drivers in roster.</td></tr>`;
-      return;
-    }
-
-    const availClass = { available: 'completed', on_duty: 'active', off_duty: 'urgent' };
-    const availLabel = { available: '✅ Available', on_duty: '⚡ On Duty', off_duty: '🔴 Off Duty' };
-
-    tbody.innerHTML = allDriversList.map(d => `
-      <tr>
-        <td><strong>${d.name}</strong><br><small style="color:var(--text-muted)">${d.email}</small></td>
-        <td>${d.phone}</td>
-        <td>${d.licenseNumber}</td>
-        <td>${d.assignedVehicle ? d.assignedVehicle.vehicleNumber + ' (' + d.assignedVehicle.vehicleType + ')' : '<span style="color:var(--text-muted)">None</span>'}</td>
-        <td><span class="badge badge-${availClass[d.availability]}">${availLabel[d.availability]}</span></td>
-        <td>${d.completedDeliveries}</td>
-        <td>${d.onTimeDeliveries} <small style="color:var(--text-muted)">(${d.completedDeliveries > 0 ? Math.round(d.onTimeDeliveries/d.completedDeliveries*100) : 0}%)</small></td>
-        <td><button class="btn btn-outline btn-sm" onclick="deleteDriver('${d._id}')">🗑 Remove</button></td>
-      </tr>
-    `).join('');
-  }
-
-  function updateStatBar() {
-    const statBar = document.getElementById('driverStatBar');
-    if (!statBar || !allDriversList) return;
-    const available = allDriversList.filter(d => d.availability === 'available').length;
-    const onDuty = allDriversList.filter(d => d.availability === 'on_duty').length;
-    const offDuty = allDriversList.filter(d => d.availability === 'off_duty').length;
-    statBar.innerHTML = `
-      <div class="stat-bar-item"><span>👤</span><span>Total: ${allDriversList.length}</span></div>
-      <div class="stat-bar-item"><span>✅</span><span>Available: ${available}</span></div>
-      <div class="stat-bar-item"><span>⚡</span><span>On Duty: ${onDuty}</span></div>
-      <div class="stat-bar-item"><span>🔴</span><span>Off Duty: ${offDuty}</span></div>
-    `;
-  }
-
-  async function handleAddDriver(e) {
-    e.preventDefault();
-    const btn = document.getElementById('submitDriverBtn');
-    btn.disabled = true; btn.textContent = 'Adding...';
-
-    const data = {
-      name: document.getElementById('drvName').value.trim(),
-      phone: document.getElementById('drvPhone').value.trim(),
-      email: document.getElementById('drvEmail').value.trim(),
-      licenseNumber: document.getElementById('drvLicense').value.trim(),
-      availability: document.getElementById('drvAvailability').value
-    };
-
-    try {
-      const res = await fetch('/api/drivers', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getAuthToken()}` },
-        body: JSON.stringify(data)
-      });
-      const result = await res.json();
-      if (result.success) {
-        showToast('Driver added successfully ✅', 'success');
-        document.getElementById('driverForm').reset();
-        closeModal('addDriverModal');
-        await loadDrivers();
-      } else {
-        showToast(result.message || 'Failed to add driver', 'error');
-      }
-    } catch (err) {
-      showToast('Network error', 'error');
-    } finally {
-      btn.disabled = false; btn.textContent = 'Add Driver';
-    }
-  }
-
-  async function deleteDriver(id) {
-    if (!confirm('Remove this driver from the roster?')) return;
-    try {
-      const res = await fetch(`/api/drivers/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${getAuthToken()}` } });
-      const result = await res.json();
-      if (result.success) {
-        showToast('Driver removed.', 'success');
-        await loadDrivers();
-      } else {
-        showToast(result.message || 'Delete failed', 'error');
-      }
-    } catch (err) {
-      showToast('Network error', 'error');
-    }
-  }
-
-  function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-  function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
-  function showToast(msg, type = 'success') {
-    const toast = document.getElementById('toast');
-    if (!toast) return;
-    toast.textContent = msg;
-    toast.className = `toast toast-${type} show`;
-    setTimeout(() => { toast.className = 'toast'; }, 3500);
-  }
-</script>
+<script src="js/driver.js"></script>
 </body>
 </html>

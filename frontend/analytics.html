@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics & Fleet KPIs | Smart Route Optimization</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 900px) {
+      .analytics-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand-icon">🚚</div>
+      <div class="sidebar-brand-title">Smart Route<span>Last-Mile Delivery</span></div>
+    </div>
+    <ul class="sidebar-menu">
+      <li class="sidebar-menu-label">Main Navigation</li>
+      <li class="sidebar-menu-item"><a href="dashboard.html"><span>📊</span><span>Dashboard</span></a></li>
+      <li class="sidebar-menu-item"><a href="deliveries.html"><span>📦</span><span>Deliveries</span></a></li>
+      <li class="sidebar-menu-item"><a href="vehicles.html"><span>🚚</span><span>Vehicles</span></a></li>
+      <li class="sidebar-menu-item"><a href="route-planner.html"><span>🗺️</span><span>Route Planner</span></a></li>
+      <li class="sidebar-menu-label">Operations</li>
+      <li class="sidebar-menu-item"><a href="driver-panel.html"><span>👤</span><span>Driver Panel</span></a></li>
+      <li class="sidebar-menu-item active"><a href="analytics.html"><span>📈</span><span>Analytics</span></a></li>
+      <li class="sidebar-menu-item"><a href="admin.html"><span>⚙️</span><span>Admin / Fleet</span></a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <p><strong>Day 5 — Analytics Live</strong></p>
+      <p>Performance KPIs & Monitoring</p>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <header class="top-nav">
+      <div class="nav-left">
+        <h1 class="page-title">📈 Fleet Performance & Logistics Analytics</h1>
+      </div>
+      <div class="nav-right">
+        <div class="user-profile-badge">
+          <div class="user-avatar" id="userAvatar">A</div>
+          <div class="user-info-text">
+            <span class="user-name" id="userName">Fleet Admin</span>
+            <span class="user-role" id="userRole">Fleet Manager</span>
+          </div>
+        </div>
+        <button id="logoutBtn" class="btn btn-outline btn-sm">Logout 🚪</button>
+      </div>
+    </header>
+
+    <div class="content-body">
+
+      <!-- TOP BANNER -->
+      <div style="background: linear-gradient(135deg, #1e3a8a, #0284c7); color:#fff; padding:1.25rem 1.5rem; border-radius:var(--radius-md); margin-bottom:1.5rem;">
+        <h2 style="font-size:1.25rem; font-weight:700; margin-bottom:0.25rem;">Fleet Operations Intelligence 📊</h2>
+        <p style="font-size:0.875rem; opacity:0.9;">
+          Real-time metrics aggregating delivery completion rates, on-time performance, vehicle utilization, and fuel efficiency variances.
+        </p>
+      </div>
+
+      <!-- PRIMARY KPI CARDS -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-info">
+            <h4>On-Time Delivery Rate</h4>
+            <div class="kpi-value" id="kpiOnTimeRate">--</div>
+            <div class="kpi-subtext">On-time completed orders</div>
+          </div>
+          <div class="kpi-icon-wrap icon-emerald">🎯</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-info">
+            <h4>Completion Rate</h4>
+            <div class="kpi-value" id="kpiCompletionRate">--</div>
+            <div class="kpi-subtext">Delivered vs Total orders</div>
+          </div>
+          <div class="kpi-icon-wrap icon-blue">✅</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-info">
+            <h4>Vehicle Utilization</h4>
+            <div class="kpi-value" id="kpiVehicleUtil">--</div>
+            <div class="kpi-subtext">Active fleet in operation</div>
+          </div>
+          <div class="kpi-icon-wrap icon-amber">🚚</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-info">
+            <h4>Fuel Cost / Delivery</h4>
+            <div class="kpi-value" id="kpiFuelCostPerStop">--</div>
+            <div class="kpi-subtext">Expense per completed stop</div>
+          </div>
+          <div class="kpi-icon-wrap icon-purple">⛽</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-info">
+            <h4>Avg. Delivery Time</h4>
+            <div class="kpi-value" id="kpiAvgDeliveryTime">--</div>
+            <div class="kpi-subtext">Doorstep transit average</div>
+          </div>
+          <div class="kpi-icon-wrap icon-blue">⏱️</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-info">
+            <h4>Route Efficiency</h4>
+            <div class="kpi-value" id="kpiRouteEfficiency">--</div>
+            <div class="kpi-subtext">Savings vs baseline sequence</div>
+          </div>
+          <div class="kpi-icon-wrap icon-emerald">⚡</div>
+        </div>
+      </div>
+
+      <!-- TWO COLUMN ANALYSIS PANELS -->
+      <div class="analytics-grid">
+        <!-- LEFT: Planned vs Actual Comparison Table -->
+        <div class="panel">
+          <div class="panel-header">
+            <h3 class="panel-title">⚖️ Planned vs. Actual Performance</h3>
+            <span class="badge badge-assigned">Variance Analysis</span>
+          </div>
+          <div class="panel-body table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Metric</th>
+                  <th>Planned</th>
+                  <th>Actual (Simulated)</th>
+                  <th>Variance</th>
+                </tr>
+              </thead>
+              <tbody id="comparisonTableBody">
+                <tr><td colspan="4" style="text-align:center; padding:1.5rem; color:var(--text-muted)">Loading metrics...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- RIGHT: Delivery Status & Priority Breakdown -->
+        <div class="panel">
+          <div class="panel-header">
+            <h3 class="panel-title">📦 Order Status & Priority Distribution</h3>
+          </div>
+          <div class="panel-body">
+            <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.5rem;">
+              Delivery Status Breakdown
+            </h4>
+            <div id="deliveryStatusChart" style="margin-bottom:1.5rem;">
+              <p style="color:var(--text-muted); font-size:0.85rem;">Loading status distribution...</p>
+            </div>
+
+            <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.5rem;">
+              Priority Allocation
+            </h4>
+            <div id="priorityChart" style="margin-bottom:1.5rem;">
+              <p style="color:var(--text-muted); font-size:0.85rem;">Loading priorities...</p>
+            </div>
+
+            <h4 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.5rem;">
+              Fleet Capacity Status
+            </h4>
+            <div id="fleetStatsSummary">
+              <!-- Populated by analytics.js -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPI FORMULA METHODOLOGY REFERENCE -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3 class="panel-title">📘 KPI Formulation & Logistics Methodology</h3>
+        </div>
+        <div class="panel-body">
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:1rem; font-size:0.85rem;">
+            <div style="padding:0.85rem; background:#f8fafc; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+              <strong>🎯 On-Time Delivery Rate</strong><br>
+              <code>(On-Time Completed / Total Completed) × 100</code>
+              <p style="font-size:0.78rem; color:var(--text-muted); margin-top:0.25rem;">
+                Measures customer SLA adherence and driver punctuality under planned ETA windows.
+              </p>
+            </div>
+
+            <div style="padding:0.85rem; background:#f8fafc; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+              <strong>🚚 Vehicle Fleet Utilization</strong><br>
+              <code>(Active In-Use Vehicles / Total Vehicles) × 100</code>
+              <p style="font-size:0.78rem; color:var(--text-muted); margin-top:0.25rem;">
+                Evaluates capital asset efficiency to prevent vehicles from sitting idle in logistics hubs.
+              </p>
+            </div>
+
+            <div style="padding:0.85rem; background:#f8fafc; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+              <strong>⛽ Fuel Cost Per Delivery</strong><br>
+              <code>Total Fuel Cost / Completed Deliveries</code>
+              <p style="font-size:0.78rem; color:var(--text-muted); margin-top:0.25rem;">
+                Tracks unit economics per package to maintain sustainable last-mile transport profit margins.
+              </p>
+            </div>
+
+            <div style="padding:0.85rem; background:#f8fafc; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+              <strong>⚡ Route Efficiency Gain</strong><br>
+              <code>((Baseline Distance - Optimized Distance) / Baseline) × 100</code>
+              <p style="font-size:0.78rem; color:var(--text-muted); margin-top:0.25rem;">
+                Quantifies kilometers and transit emissions conserved by Nearest Neighbor sequencing.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/analytics.js"></script>
+</body>
+</html>
