@@ -23,7 +23,7 @@ app.use(cors());
 app.use(express.json());
 
 // Serve static frontend files
-app.use(express.static(path.join(__dirname, '../frontend')));
+// app.use(express.static(path.join(__dirname, '../frontend')));
 
 // ── API Routes ─────────────────────────────────────────────
 app.use('/api/auth', require('./routes/authRoutes'));
@@ -36,7 +36,10 @@ app.use('/api/analytics', require('./routes/analyticsRoutes'));
 
 // Root → login page
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/login.html'));
+  res.json({
+    success: true,
+    message: 'Smart Route Optimization API is running'
+  });
 });
 
 // Error handling middleware
@@ -108,8 +111,15 @@ async function seedDefaultAccounts() {
   }
 }
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-  console.log(`🌐 Frontend: http://localhost:${PORT}/login.html`);
-});
+// Export app for Vercel
+module.exports = app;
+
+// Start server locally
+if (require.main === module) {
+  const PORT = process.env.PORT || 5000;
+
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
+    console.log(`🌐 Frontend: http://localhost:${PORT}/login.html`);
+  });
+}

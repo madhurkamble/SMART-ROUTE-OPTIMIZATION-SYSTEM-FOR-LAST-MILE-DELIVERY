@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin & Fleet Management | Smart Route Optimization</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .admin-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 960px) {
+      .admin-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand-icon">🚚</div>
+      <div class="sidebar-brand-title">Smart Route<span>Last-Mile Delivery</span></div>
+    </div>
+    <ul class="sidebar-menu">
+      <li class="sidebar-menu-label">Main Navigation</li>
+      <li class="sidebar-menu-item"><a href="dashboard.html"><span>📊</span><span>Dashboard</span></a></li>
+      <li class="sidebar-menu-item"><a href="deliveries.html"><span>📦</span><span>Deliveries</span></a></li>
+      <li class="sidebar-menu-item"><a href="vehicles.html"><span>🚚</span><span>Vehicles</span></a></li>
+      <li class="sidebar-menu-item"><a href="route-planner.html"><span>🗺️</span><span>Route Planner</span></a></li>
+      <li class="sidebar-menu-label">Operations</li>
+      <li class="sidebar-menu-item"><a href="driver-panel.html"><span>👤</span><span>Driver Panel</span></a></li>
+      <li class="sidebar-menu-item"><a href="analytics.html"><span>📈</span><span>Analytics</span></a></li>
+      <li class="sidebar-menu-item active"><a href="admin.html"><span>⚙️</span><span>Admin / Fleet</span></a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <p><strong>System MVP: Complete (Day 6)</strong></p>
+      <p>All 8 Modules Functional</p>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <header class="top-nav">
+      <div class="nav-left">
+        <h1 class="page-title">⚙️ Fleet Central Administration & Settings</h1>
+      </div>
+      <div class="nav-right">
+        <div class="user-profile-badge">
+          <div class="user-avatar" id="userAvatar">A</div>
+          <div class="user-info-text">
+            <span class="user-name" id="userName">Fleet Admin</span>
+            <span class="user-role" id="userRole">Administrator</span>
+          </div>
+        </div>
+        <button id="logoutBtn" class="btn btn-outline btn-sm">Logout 🚪</button>
+      </div>
+    </header>
+
+    <div class="content-body">
+
+      <!-- SYSTEM STATUS BANNER -->
+      <div style="background: linear-gradient(135deg, #0f172a, #1e293b); color:#fff; padding:1.25rem 1.5rem; border-radius:var(--radius-md); margin-bottom:1.5rem; border:1px solid #334155;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+          <div>
+            <h2 style="font-size:1.25rem; font-weight:700; margin-bottom:0.25rem;">Fleet Command & Control Hub</h2>
+            <p style="font-size:0.85rem; opacity:0.85;">Manage system access, tune fleet logistics algorithms, inspect dispatch history, and reset demonstration datasets.</p>
+          </div>
+          <button id="resetDemoDataBtn" class="btn btn-outline btn-sm" style="color:#fff; border-color:#64748b; background:rgba(255,255,255,0.08);">
+            🔄 Restore Default Dataset
+          </button>
+        </div>
+      </div>
+
+      <!-- SYSTEM HEALTH METRICS -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-info">
+            <h4>System Backend</h4>
+            <div class="kpi-value" style="color:var(--success);">Online</div>
+            <div class="kpi-subtext">Node.js / Express REST API</div>
+          </div>
+          <div class="kpi-icon-wrap icon-emerald">🟢</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-info">
+            <h4>Database Engine</h4>
+            <div class="kpi-value" style="color:var(--primary);">Connected</div>
+            <div class="kpi-subtext">MongoDB / Mongoose</div>
+          </div>
+          <div class="kpi-icon-wrap icon-blue">🗄️</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-info">
+            <h4>System Users</h4>
+            <div class="kpi-value" id="statTotalUsers">--</div>
+            <div class="kpi-subtext">Registered credentials</div>
+          </div>
+          <div class="kpi-icon-wrap icon-purple">👥</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-info">
+            <h4>Dispatched Routes</h4>
+            <div class="kpi-value" id="statTotalRoutes">--</div>
+            <div class="kpi-subtext">Saved in database</div>
+          </div>
+          <div class="kpi-icon-wrap icon-amber">🗺️</div>
+        </div>
+      </div>
+
+      <!-- MAIN ADMIN GRID -->
+      <div class="admin-grid">
+
+        <!-- LEFT: USER MANAGEMENT -->
+        <div class="panel">
+          <div class="panel-header">
+            <h3 class="panel-title">👥 User Accounts & Access Control</h3>
+            <button class="btn btn-primary btn-sm" onclick="openModal('addUserModal')">➕ Create User</button>
+          </div>
+          <div class="panel-body table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Phone</th>
+                  <th>Created</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody">
+                <tr><td colspan="5" style="text-align:center; padding:1.5rem; color:var(--text-muted)">Loading users...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- RIGHT: GLOBAL FLEET CONFIGURATION -->
+        <div class="panel">
+          <div class="panel-header">
+            <h3 class="panel-title">⚙️ Fleet Parameters</h3>
+          </div>
+          <div class="panel-body">
+            <form id="globalConfigForm">
+              <div class="form-group">
+                <label>Petrol Fuel Price (₹/L)</label>
+                <input id="cfgPetrol" type="number" step="0.5" class="form-control" value="104.0" required>
+              </div>
+
+              <div class="form-group">
+                <label>Diesel Fuel Price (₹/L)</label>
+                <input id="cfgDiesel" type="number" step="0.5" class="form-control" value="91.0" required>
+              </div>
+
+              <div class="form-group">
+                <label>EV Energy Rate (₹/kWh)</label>
+                <input id="cfgEV" type="number" step="0.5" class="form-control" value="8.5" required>
+              </div>
+
+              <div class="form-group">
+                <label>Base City Speed (km/h)</label>
+                <input id="cfgBaseSpeed" type="number" class="form-control" value="35" required>
+              </div>
+
+              <div class="form-group">
+                <label>Stop Handover Time (mins)</label>
+                <input id="cfgServiceTime" type="number" class="form-control" value="5" required>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-block">Save Configuration 💾</button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ROUTE DISPATCH AUDIT LOG -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3 class="panel-title">📜 Dispatched Route Audit History</h3>
+          <span class="badge badge-assigned">Optimization Log</span>
+        </div>
+        <div class="panel-body table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Route ID</th>
+                <th>Assigned Driver</th>
+                <th>Vehicle</th>
+                <th>Total Distance</th>
+                <th>Stops</th>
+                <th>Efficiency Score</th>
+                <th>Dispatched At</th>
+              </tr>
+            </thead>
+            <tbody id="auditRoutesTableBody">
+              <tr><td colspan="7" style="text-align:center; padding:1.5rem; color:var(--text-muted)">Loading route dispatch history...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- ADD USER MODAL -->
+<div id="addUserModal" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>➕ Create System User</h3>
+      <button class="modal-close" onclick="closeModal('addUserModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <form id="addUserForm">
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input id="newUserName" type="text" class="form-control" placeholder="e.g. Ramesh Kulkarni" required>
+        </div>
+
+        <div class="form-group">
+          <label>Email Address *</label>
+          <input id="newUserEmail" type="email" class="form-control" placeholder="e.g. ramesh@lastmile.com" required>
+        </div>
+
+        <div class="form-group">
+          <label>Password *</label>
+          <input id="newUserPassword" type="password" class="form-control" placeholder="Minimum 6 characters" minlength="6" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>System Role *</label>
+            <select id="newUserRole" class="form-control" required>
+              <option value="driver">Driver</option>
+              <option value="admin">Fleet Manager / Admin</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input id="newUserPhone" type="text" class="form-control" placeholder="+91 98765 00000">
+          </div>
+        </div>
+
+        <div class="modal-footer" style="padding-right:0; padding-left:0; margin-bottom:-1rem;">
+          <button type="button" class="btn btn-outline" onclick="closeModal('addUserModal')">Cancel</button>
+          <button type="submit" id="submitUserBtn" class="btn btn-primary">Create User</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="js/config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>
