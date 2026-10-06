@@ -67,7 +67,9 @@
 - [x] authRoutes.js updated — GET /api/auth/users & POST /api/auth/seed-reset
 - [x] PRD.md created in docs/ — professional college-grade Product Requirements Document
 - [x] Comprehensive root README.md created — problem statement, architecture, formulas, APIs, and deployment guides
+- [x] docs.html interactive web documentation portal created in frontend/ (accessible over HTTP/HTTPS)
 - [x] screenshots/ directory created with image capture documentation
 - [x] Verified all 8 functional pages interconnected with zero dead links
 - [x] Leaflet map tile rendering fixes verified and tested
-- [x] Ready for production cloud deployment (Render + Netlify + MongoDB Atlas)
+- [x] Ready for production cloud deployment (Vercel + Render + MongoDB Atlas)
+

@@ -70,7 +70,7 @@ async function seedDefaultAccounts() {
         { vehicleNumber: 'MH12AB1234', vehicleType: 'van',   fuelType: 'diesel',  mileage: 14, fuelTankCapacity: 60, loadCapacity: 800,  availability: 'available' },
         { vehicleNumber: 'MH12CD5678', vehicleType: 'bike',  fuelType: 'petrol',  mileage: 45, fuelTankCapacity: 12, loadCapacity: 30,   availability: 'available' },
         { vehicleNumber: 'MH14EF9012', vehicleType: 'van',   fuelType: 'petrol',  mileage: 16, fuelTankCapacity: 50, loadCapacity: 700,  availability: 'in_use'   },
-        { vehicleNumber: 'MH14GH3456', vehicleType: 'truck', fuelType: 'diesel',  mileage: 8,  fuelTankCapacity: 150, loadCapacity: 5000, availability: 'available' },
+        { vehicleNumber: 'MH14GH3456', vehicleType: 'truck', fuelType: 'diesel',  mileage: 8,  fuelTankCapacity: 150, loadCapacity: 5000, availability: 'maintenance' },
         { vehicleNumber: 'MH20EV0001', vehicleType: 'bike',  fuelType: 'electric', mileage: 80, fuelTankCapacity: 0,  loadCapacity: 25,   availability: 'available' }
       ]);
       console.log(`🚗 ${vehicles.length} vehicles seeded`);

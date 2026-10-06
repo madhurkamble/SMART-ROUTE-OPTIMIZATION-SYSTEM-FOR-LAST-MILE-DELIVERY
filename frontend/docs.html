@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Documentation | Smart Route Optimization System</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .docs-container {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 100vh;
+      background: #f8fafc;
+    }
+
+    .docs-nav {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      background: #0f172a;
+      color: #94a3b8;
+      padding: 1.5rem 1rem;
+      border-right: 1px solid #1e293b;
+    }
+
+    .docs-nav h3 {
+      color: #f8fafc;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+      padding-left: 0.5rem;
+    }
+
+    .docs-nav-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .docs-nav-group a {
+      display: block;
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 0.85rem;
+      padding: 0.4rem 0.6rem;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s;
+    }
+
+    .docs-nav-group a:hover, .docs-nav-group a.active {
+      background: #1e293b;
+      color: #38bdf8;
+    }
+
+    .docs-content {
+      padding: 2.5rem 3rem;
+      max-width: 1000px;
+    }
+
+    .docs-section {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .docs-section h2 {
+      font-size: 1.5rem;
+      color: #0f172a;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .docs-section h3 {
+      font-size: 1.15rem;
+      color: #1e293b;
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .code-block {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius-sm);
+      font-family: Consolas, Monaco, "Courier New", monospace;
+      font-size: 0.85rem;
+      overflow-x: auto;
+      margin: 1rem 0;
+      line-height: 1.6;
+    }
+
+    .formula-card {
+      background: #f0fdf4;
+      border-left: 4px solid var(--success);
+      padding: 1rem 1.25rem;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      margin: 1rem 0;
+    }
+
+    .badge-method {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 0.75rem;
+      margin-right: 0.5rem;
+    }
+    .badge-get { background: #dbeafe; color: #1e40af; }
+    .badge-post { background: #dcfce7; color: #15803d; }
+    .badge-put { background: #fef3c7; color: #b45309; }
+    .badge-delete { background: #fee2e2; color: #b91c1c; }
+
+    @media (max-width: 860px) {
+      .docs-container {
+        grid-template-columns: 1fr;
+      }
+      .docs-nav {
+        position: static;
+        height: auto;
+      }
+      .docs-content {
+        padding: 1.5rem 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="docs-container">
+
+  <!-- LEFT STICKY NAVIGATION -->
+  <aside class="docs-nav">
+    <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1.5rem; padding-left:0.5rem;">
+      <span style="font-size:1.6rem;">🚚</span>
+      <div>
+        <strong style="color:#fff; font-size:1rem; display:block;">Smart Route</strong>
+        <small style="color:#38bdf8;">Complete Documentation</small>
+      </div>
+    </div>
+
+    <div class="docs-nav-group">
+      <h3>1. Overview</h3>
+      <a href="#intro">Project Introduction</a>
+      <a href="#objectives">Key Objectives</a>
+      <a href="#architecture">System Architecture</a>
+      <a href="#techstack">Technology Stack</a>
+    </div>
+
+    <div class="docs-nav-group">
+      <h3>2. Core Algorithms</h3>
+      <a href="#haversine">Haversine Distance</a>
+      <a href="#nearest-neighbor">Nearest Neighbor</a>
+      <a href="#traffic">Traffic Simulation</a>
+      <a href="#fuel">Fuel & Cost Modeling</a>
+      <a href="#eta">ETA & Service Time</a>
+      <a href="#scoring">Route Scoring Formula</a>
+    </div>
+
+    <div class="docs-nav-group">
+      <h3>3. API Reference</h3>
+      <a href="#api-auth">Authentication API</a>
+      <a href="#api-deliveries">Deliveries API</a>
+      <a href="#api-routes">Route Optimization API</a>
+      <a href="#api-analytics">Analytics API</a>
+    </div>
+
+    <div class="docs-nav-group">
+      <h3>4. Database Models</h3>
+      <a href="#db-models">Mongoose Schemas</a>
+    </div>
+
+    <div class="docs-nav-group">
+      <h3>5. Viva Voce & Q&A</h3>
+      <a href="#viva">Interview & Viva Questions</a>
+    </div>
+
+    <div class="docs-nav-group">
+      <h3>6. Deployment</h3>
+      <a href="#deployment">Deployment & Environment</a>
+    </div>
+
+    <div style="padding-left:0.5rem; margin-top:2rem;">
+      <a href="dashboard.html" class="btn btn-primary btn-sm btn-block" style="text-align:center; display:block; color:#fff;">
+        Launch Application 🚀
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN DOCUMENTATION CONTENT -->
+  <main class="docs-content">
+
+    <!-- HEADER TITLE -->
+    <div style="margin-bottom:2rem;">
+      <span class="badge badge-assigned" style="font-size:0.8rem;">Technical Specification & Guide</span>
+      <h1 style="font-size:2.2rem; color:#0f172a; margin-top:0.5rem; font-weight:800;">
+        Smart Route Optimization System for Last-Mile Delivery
+      </h1>
+      <p style="color:var(--text-muted); font-size:1rem; margin-top:0.35rem;">
+        Complete architectural specification, mathematical formula reference, REST API documentation, and viva-voce preparation manual.
+      </p>
+    </div>
+
+    <!-- SECTION 1: OVERVIEW -->
+    <section class="docs-section" id="intro">
+      <h2>1. Project Introduction & Overview</h2>
+      <p>
+        <strong>Last-mile delivery</strong> is the final leg of the supply chain journey where a shipment travels from a local transportation depot or fulfillment center to the customer's personal doorstep. In modern e-commerce and retail logistics, this stage represents <strong>53% of overall shipping expenses</strong>.
+      </p>
+      <p style="margin-top:0.75rem;">
+        The <strong>Smart Route Optimization System</strong> is an end-to-end web platform tailored for fleet dispatchers and drivers. It eliminates random manual sequencing by applying algorithmic nearest-neighbor ordering, dynamic traffic compensation, fuel consumption modeling, and live driver delivery lifecycle execution.
+      </p>
+
+      <h3 id="objectives">Core Engineering Objectives</h3>
+      <ul style="padding-left:1.25rem; line-height:1.8; color:#334155; font-size:0.95rem;">
+        <li><strong>Multi-Stop Sequencing:</strong> Automatically determine the most efficient delivery order from starting depot coordinates.</li>
+        <li><strong>Priority Handling:</strong> Ensure urgent packages receive 40% distance preference over standard deliveries.</li>
+        <li><strong>Traffic-Aware Routing:</strong> Adapt travel durations using simulated factors (Low 1.0x, Medium 1.2x, High 1.5x) with dynamic recalculation.</li>
+        <li><strong>Fuel & Financial Transparency:</strong> Model fuel volume and expense across Petrol, Diesel, and Electric vehicles.</li>
+        <li><strong>Driver Workflow:</strong> Provide field drivers with customer contacts, stop maps, and real-time status transitions (`Pending` &rarr; `Out for Delivery` &rarr; `Completed`).</li>
+        <li><strong>Zero Paid API Dependency:</strong> Powered by Leaflet.js and OpenStreetMap with zero Google Maps billing quotas.</li>
+      </ul>
+    </section>
+
+    <!-- SECTION 2: ARCHITECTURE -->
+    <section class="docs-section" id="architecture">
+      <h2>2. Architecture & Technology Stack</h2>
+      <p>The application follows a clean 3-tier MVC architecture adhering strictly to beginner-friendly, inspectable technologies:</p>
+
+      <div class="code-block">
+┌─────────────────────────────────────────────────────────────┐
+│                 CLIENT LAYER (Vanilla HTML5 / CSS3 / JS)    │
+│  ├── 8 Interconnected Functional Web Pages                  │
+│  ├── Leaflet.js + OpenStreetMap Vector Layer Rendering      │
+│  └── Client Session JWT Token Storage & Guard Validation    │
+└──────────────────────────────┬──────────────────────────────┘
+                               │  JSON over HTTP/HTTPS (Fetch API)
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│                 APPLICATION LAYER (Node.js & Express)       │
+│  ├── RESTful API Endpoints (/api/auth, /api/routes, etc.)   │
+│  ├── Route Optimization Engine (routeOptimizer.js)          │
+│  ├── Distance Matrix & Haversine Engine (distanceCalc.js)   │
+│  ├── Fuel Consumption & Cost Calculator (fuelCalc.js)       │
+│  └── Stop-by-Stop Traffic & ETA Engine (etaCalc.js)         │
+└──────────────────────────────┬──────────────────────────────┘
+                               │  Mongoose ODM Drivers
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│                 DATA PERSISTENCE LAYER (MongoDB)            │
+│  ├── Collections: users, deliveries, drivers, vehicles,    │
+│  │                routes                                    │
+└─────────────────────────────────────────────────────────────┘
+      </div>
+
+      <h3 id="techstack">Technology Stack Specifications</h3>
+      <table class="table" style="margin-top:1rem;">
+        <thead>
+          <tr><th>Layer</th><th>Technology</th><th>Rationale</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Frontend UI</strong></td><td>HTML5, CSS3, Vanilla JS</td><td>Zero build steps, 100% inspectable, ultra-fast loading</td></tr>
+          <tr><td><strong>Backend Runtime</strong></td><td>Node.js & Express.js</td><td>Asynchronous non-blocking I/O, modular routing</td></tr>
+          <tr><td><strong>Database</strong></td><td>MongoDB & Mongoose</td><td>Flexible document storage ideal for geo-coordinates</td></tr>
+          <tr><td><strong>Interactive Maps</strong></td><td>Leaflet.js + OpenStreetMap</td><td>Free, open-source mapping with zero API keys or credit card limits</td></tr>
+          <tr><td><strong>Authentication</strong></td><td>bcryptjs + jsonwebtoken (JWT)</td><td>Secure password hashing and stateless token verification</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- SECTION 3: MATHEMATICAL FORMULAS & ALGORITHMS -->
+    <section class="docs-section" id="haversine">
+      <h2>3. Core Algorithms & Mathematical Formulas</h2>
+
+      <h3>A. Haversine Distance Formula</h3>
+      <p>
+        Because the Earth is an oblate spheroid, simple 2D Pythagorean distance ($d = \sqrt{\Delta x^2 + \Delta y^2}$) produces severe errors on GPS coordinates. The <strong>Haversine Formula</strong> calculates the great-circle spherical distance across the Earth's curved surface:
+      </p>
+
+      <div class="formula-card">
+        <strong>Mathematical Formulation:</strong><br>
+        $$\Delta \phi = \text{lat}_2 - \text{lat}_1 \quad (\text{radians})$$<br>
+        $$\Delta \lambda = \text{lon}_2 - \text{lon}_1 \quad (\text{radians})$$<br>
+        $$a = \sin^2\left(\frac{\Delta \phi}{2}\right) + \cos(\text{lat}_1) \cdot \cos(\text{lat}_2) \cdot \sin^2\left(\frac{\Delta \lambda}{2}\right)$$<br>
+        $$c = 2 \cdot \text{atan2}(\sqrt{a}, \sqrt{1-a})$$<br>
+        $$d = R \cdot c \quad \text{where } R = 6,371\text{ km (Earth mean radius)}$$
+      </div>
+
+      <h3 id="nearest-neighbor">B. Priority-Aware Nearest Neighbor Algorithm</h3>
+      <p>
+        The Traveling Salesperson Problem (TSP) is NP-hard. For last-mile delivery fleets of 5–30 stops, the <strong>Nearest Neighbor Greedy Heuristic</strong> executes in milliseconds ($O(N^2)$) and yields near-optimal routing.
+      </p>
+      <p style="margin-top:0.5rem;">
+        To prevent urgent packages from waiting, our engine applies a <strong>Priority Distance Discount Factor (0.6x)</strong>:
+      </p>
+      <div class="code-block">
+EffectiveDistance = RawHaversineDistance * (isUrgent ? 0.6 : 1.0)
+      </div>
+      <p>
+        An urgent package 10 km away is treated as only 6 km away during candidate evaluation, giving it priority over an 8 km standard package.
+      </p>
+
+      <h3 id="traffic">C. Traffic Simulation Model</h3>
+      <p>Traffic delays are simulated using standardized multipliers:</p>
+      <ul style="padding-left:1.25rem; line-height:1.7; font-size:0.9rem;">
+        <li><strong>LOW Traffic (1.0x):</strong> Free-flow urban transit, base speed = $35\text{ km/h}$.</li>
+        <li><strong>MEDIUM Traffic (1.2x):</strong> Typical city daylight traffic, effective speed = $\frac{35}{1.2} \approx 29.2\text{ km/h}$.</li>
+        <li><strong>HIGH Traffic (1.5x):</strong> Peak congestion, effective speed = $\frac{35}{1.5} \approx 23.3\text{ km/h}$.</li>
+      </ul>
+
+      <h3 id="fuel">D. Fuel Consumption & Cost Formulation</h3>
+      <div class="formula-card">
+        $$\text{Fuel Consumed} = \frac{\text{Total Distance (km)}}{\text{Vehicle Mileage (km/L)}}$$<br>
+        $$\text{Total Fuel Cost (₹)} = \text{Fuel Consumed} \times \text{Unit Fuel Price (₹/L)}$$<br>
+        $$\text{Cost Per Stop} = \frac{\text{Total Fuel Cost}}{\text{Stops Count}}$$
+      </div>
+
+      <h3 id="eta">E. Stop-by-Stop ETA & Service Time Formulation</h3>
+      <div class="formula-card">
+        $$\text{Driving Minutes} = \left(\frac{\text{Distance}}{\text{Effective Speed}}\right) \times 60$$<br>
+        $$\text{Service Minutes} = \text{Stops Count} \times 5\text{ mins (doorstep handover)}$$<br>
+        $$\text{Total Trip Duration} = \text{Driving Minutes} + \text{Service Minutes}$$
+      </div>
+
+      <h3 id="scoring">F. Composite Route Scoring Formula</h3>
+      <p>A lower route score indicates a more cost-effective and punctual route plan:</p>
+      <div class="formula-card">
+        $$\text{Route Score} = (\text{Distance} \times 1.5) + \text{Traffic Penalty} + \text{Fuel Cost} - \text{Priority Bonus}$$<br>
+        $$\text{Traffic Penalty} = (\text{Traffic Factor} - 1.0) \times 25.0$$<br>
+        $$\text{Priority Bonus} = \text{Urgent Orders Count} \times 15.0$$
+      </div>
+    </section>
+
+    <!-- SECTION 4: API REFERENCE -->
+    <section class="docs-section" id="api-auth">
+      <h2>4. Complete REST API Reference</h2>
+
+      <h3>Authentication Endpoints</h3>
+      <p><span class="badge-method badge-post">POST</span> <code>/api/auth/login</code> &mdash; Authenticates user and returns JWT bearer token.</p>
+      <p><span class="badge-method badge-post">POST</span> <code>/api/auth/register</code> &mdash; Creates new fleet user account.</p>
+      <p><span class="badge-method badge-get">GET</span> <code>/api/auth/me</code> &mdash; Validates current JWT session token.</p>
+      <p><span class="badge-method badge-get">GET</span> <code>/api/auth/users</code> &mdash; Retrieves all registered system users (Admin view).</p>
+      <p><span class="badge-method badge-post">POST</span> <code>/api/auth/seed-reset</code> &mdash; Restores default sample logistics dataset.</p>
+
+      <h3 id="api-deliveries">Deliveries Endpoints</h3>
+      <p><span class="badge-method badge-get">GET</span> <code>/api/deliveries</code> &mdash; Lists all delivery orders.</p>
+      <p><span class="badge-method badge-post">POST</span> <code>/api/deliveries</code> &mdash; Creates a new delivery order with GPS coordinates.</p>
+      <p><span class="badge-method badge-put">PUT</span> <code>/api/deliveries/:id/status</code> &mdash; Updates delivery status (`out_for_delivery`, `completed`, `failed`).</p>
+      <p><span class="badge-method badge-post">POST</span> <code>/api/deliveries/:id/issue</code> &mdash; Logs a field issue/delay (traffic, breakdown, unavailable).</p>
+      <p><span class="badge-method badge-delete">DELETE</span> <code>/api/deliveries/:id</code> &mdash; Removes order from database.</p>
+
+      <h3 id="api-routes">Route Optimization Endpoints</h3>
+      <p><span class="badge-method badge-get">GET</span> <code>/api/routes/data</code> &mdash; Returns drivers, vehicles, and pending deliveries for the planner form.</p>
+      <p><span class="badge-method badge-post">POST</span> <code>/api/routes/preview</code> &mdash; Runs Nearest Neighbor preview without database persistence.</p>
+      <p><span class="badge-method badge-post">POST</span> <code>/api/routes/optimize</code> &mdash; Runs optimization, saves Route document, and links driver/vehicle.</p>
+      <p><span class="badge-method badge-post">POST</span> <code>/api/routes/:id/recalculate</code> &mdash; Recomputes route metrics dynamically when traffic factor changes.</p>
+      <p><span class="badge-method badge-get">GET</span> <code>/api/routes/driver/:driverId</code> &mdash; Returns the active assigned route for a specific driver.</p>
+
+      <h3 id="api-analytics">Analytics Endpoints</h3>
+      <p><span class="badge-method badge-get">GET</span> <code>/api/analytics</code> &mdash; Returns On-Time Rate, Completion Rate, Vehicle Utilization, and Planned vs. Actual Variance.</p>
+      <p><span class="badge-method badge-get">GET</span> <code>/api/dashboard/summary</code> &mdash; Returns aggregated active fleet counts and total route mileage.</p>
+    </section>
+
+    <!-- SECTION 5: DATABASE MODELS -->
+    <section class="docs-section" id="db-models">
+      <h2>5. Database Schema & Data Dictionary</h2>
+
+      <h3>1. Delivery Schema (`Delivery.js`)</h3>
+      <div class="code-block">
+orderId: String (Unique auto-generated, e.g. DEL-1001)
+customerName: String (Required)
+customerPhone: String (Required)
+deliveryAddress: String (Required)
+latitude: Number (Decimal degrees, Required)
+longitude: Number (Decimal degrees, Required)
+priority: 'urgent' | 'standard' (Default: 'standard')
+timeWindowStart: String ('09:00')
+timeWindowEnd: String ('18:00')
+packageWeight: Number (kg)
+packageSize: 'small' | 'medium' | 'large'
+assignedDriver: ObjectId ref 'Driver'
+assignedVehicle: ObjectId ref 'Vehicle'
+status: 'pending' | 'assigned' | 'out_for_delivery' | 'completed' | 'failed'
+plannedETA: String
+actualDeliveryTime: Date
+failureReason: String
+notes: String
+      </div>
+
+      <h3>2. Route Schema (`Route.js`)</h3>
+      <div class="code-block">
+routeId: String (Unique, e.g. ROU-4921)
+driver: ObjectId ref 'Driver'
+vehicle: ObjectId ref 'Vehicle'
+trafficCondition: 'low' | 'medium' | 'high'
+trafficFactor: Number (1.0, 1.2, 1.5)
+totalDistanceKm: Number
+totalDurationMinutes: Number
+estimatedETA: String
+estimatedFuelLiters: Number
+estimatedFuelCost: Number
+routeScore: Number
+stops: [
+  { stopNumber, orderId, customerName, deliveryAddress, latitude, longitude,
+    priority, distanceFromPrevious, estimatedArrival, status }
+]
+status: 'planned' | 'in_progress' | 'completed'
+      </div>
+    </section>
+
+    <!-- SECTION 6: VIVA VOCE & INTERVIEW Q&A -->
+    <section class="docs-section" id="viva">
+      <h2>6. Viva Voce & Technical Interview Guide</h2>
+
+      <div style="margin-bottom:1.5rem;">
+        <h4>Q1: Why did you choose the Haversine formula instead of Euclidean distance?</h4>
+        <p style="color:#334155; font-size:0.9rem; margin-top:0.25rem;">
+          <strong>Answer:</strong> Euclidean distance assumes a flat 2D Cartesian plane. Because the Earth is a sphere, lines of longitude converge toward the poles ($1^\circ$ of longitude is smaller near the poles than at the equator). The Haversine formula calculates the true great-circle distance along the spherical surface using spherical trigonometry.
+        </p>
+      </div>
+
+      <div style="margin-bottom:1.5rem;">
+        <h4>Q2: How does the algorithm ensure Urgent orders are not delayed?</h4>
+        <p style="color:#334155; font-size:0.9rem; margin-top:0.25rem;">
+          <strong>Answer:</strong> During each step of the Nearest Neighbor candidate evaluation, urgent deliveries receive an effective distance discount factor of $0.6\times$. This means an urgent stop 10 km away is evaluated as if it were 6 km away, prioritizing it over a 7 km standard delivery unless the standard delivery is directly on the way.
+        </p>
+      </div>
+
+      <div style="margin-bottom:1.5rem;">
+        <h4>Q3: Why use Leaflet.js instead of the Google Maps JavaScript API?</h4>
+        <p style="color:#334155; font-size:0.9rem; margin-top:0.25rem;">
+          <strong>Answer:</strong> Google Maps requires a paid Google Cloud account, API keys, and incurs billing limits. Leaflet.js is lightweight ($~42\text{ KB}$), 100% open-source, uses free OpenStreetMap tiles, and requires zero paid credentials, making it optimal for resilient, reproducible academic MVPs.
+        </p>
+      </div>
+
+      <div style="margin-bottom:1.5rem;">
+        <h4>Q4: How does dynamic route recalculation work when traffic increases?</h4>
+        <p style="color:#334155; font-size:0.9rem; margin-top:0.25rem;">
+          <strong>Answer:</strong> When the traffic factor increases from Medium (1.2x) to High (1.5x), the effective transit speed drops from $\approx 29\text{ km/h}$ to $\approx 23\text{ km/h}$. The endpoint recalculates driving minutes, applies doorstep service times, updates the clock ETAs, increases the congestion penalty in the route score, and re-renders the map polyline in red.
+        </p>
+      </div>
+    </section>
+
+    <!-- SECTION 7: DEPLOYMENT GUIDE -->
+    <section class="docs-section" id="deployment">
+      <h2>7. Production Deployment & Live Access</h2>
+
+      <h3>Deploying Frontend & Backend</h3>
+      <p>The application can be deployed as a unified service on Render or separated across Vercel and MongoDB Atlas:</p>
+
+      <div class="code-block">
+# Production Environment Variables (.env)
+PORT=5000
+MONGODB_URI=mongodb+srv://&lt;db_user&gt;:&lt;db_password&gt;@cluster0.mongodb.net/smart_route_db?retryWrites=true&w=majority
+JWT_SECRET=production_jwt_secret_key_super_secure_2026
+      </div>
+
+      <div style="padding:1rem; background:#eff6ff; border-radius:var(--radius-sm); border:1px solid #bfdbfe; margin-top:1rem;">
+        <strong>🌐 Live Deployment Architecture:</strong><br>
+        <span style="font-size:0.88rem; color:#1e40af;">
+          The frontend <code>config.js</code> automatically detects if the browser is running on <code>localhost</code> or a live HTTPS domain. On live HTTPS hosting (Vercel / Netlify / Render), API requests seamlessly route to the cloud backend.
+        </span>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+</body>
+</html>

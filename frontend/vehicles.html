@@ -136,6 +136,14 @@
             <label>Load Capacity (kg) *</label>
             <input id="vehLoadCap" type="number" min="1" class="form-control" placeholder="e.g. 700" required>
           </div>
+          <div class="form-group">
+            <label>Initial Status *</label>
+            <select id="vehAvailability" class="form-control">
+              <option value="available" selected>✅ Available</option>
+              <option value="in_use">⚡ In Use</option>
+              <option value="maintenance">🔧 In Maintenance</option>
+            </select>
+          </div>
         </div>
       </form>
     </div>
@@ -176,24 +184,5 @@
 <script src="js/config.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/vehicles.js"></script>
-<script>
-  // After vehicles load, update stat bar
-  document.addEventListener('DOMContentLoaded', async () => {
-    // Wait a moment for loadVehicles to complete via vehicles.js
-    setTimeout(() => {
-      const statBar = document.getElementById('vehicleStatBar');
-      if (!allVehiclesData || !statBar) return;
-      const available = allVehiclesData.filter(v => v.availability === 'available').length;
-      const inUse = allVehiclesData.filter(v => v.availability === 'in_use').length;
-      const maintenance = allVehiclesData.filter(v => v.availability === 'maintenance').length;
-      statBar.innerHTML = `
-        <div class="stat-bar-item"><span>🚐</span><span>Total: ${allVehiclesData.length}</span></div>
-        <div class="stat-bar-item"><span>✅</span><span>Available: ${available}</span></div>
-        <div class="stat-bar-item"><span>⚡</span><span>In Use: ${inUse}</span></div>
-        <div class="stat-bar-item"><span>🔧</span><span>Maintenance: ${maintenance}</span></div>
-      `;
-    }, 800);
-  });
-</script>
 </body>
 </html>
