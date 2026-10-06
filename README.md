@@ -6,11 +6,26 @@ The system provides **role-based access for Fleet Managers/Admins and Delivery D
 
 ---
 
-## 🌐 Live Application
-
 ### 🚀 Live Demo
 
 👉 **[Open Smart Route Optimization System](https://smart-route-optimization-system-for.vercel.app/login.html)**
+
+> Please log in using the demo credentials below to access the application.
+
+---
+
+## 🔐 Demo Credentials
+
+### 👨‍💼 Admin / Fleet Manager
+
+```text
+Admin:
+Email: admin@lastmile.com
+Password: admin123
+
+Driver:
+Email: rahul@lastmile.com
+Password: driver123
 
 ### 📚 Web Documentation
 
