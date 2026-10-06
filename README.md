@@ -4,8 +4,19 @@ A complete, full-stack last-mile logistics and route optimization web applicatio
 
 ---
 
+## 🌐 Live Application & Web Documentation (HTTPS)
+
+- **Live Application Deployment (Production):**  
+  [https://smart-route-optimization-system-for.vercel.app/login.html](https://smart-route-optimization-system-for.vercel.app/login.html)
+- **Interactive System Documentation Portal (Web / HTTPS):**  
+  [https://smart-route-optimization-system-for.vercel.app/docs.html](https://smart-route-optimization-system-for.vercel.app/docs.html) *(or local: `http://localhost:5000/docs.html`)*
+- **Product Requirements Document (PRD):**  
+  [`docs/PRD.md`](./docs/PRD.md)
+
+---
+
 ## 📌 Problem Statement
-Last-mile delivery is the single most expensive stage of logistics, accounting for more than 50% of total transport expenses. Urban delivery operations suffer from:
+Last-mile delivery is the single most expensive stage of logistics, accounting for more than 53% of total transport expenses. Urban delivery operations suffer from:
 - Inefficient manual stop sequencing and excessive backtracking.
 - Traffic congestion causing delivery delays and missed customer time windows.
 - Uncontrolled fuel consumption cutting into profit margins.
@@ -17,7 +28,7 @@ Last-mile delivery is the single most expensive stage of logistics, accounting f
 ## 🎯 Objectives
 - Provide an intuitive multi-stop route planner that sequences delivery stops efficiently.
 - Calculate accurate geographical distances using the mathematical **Haversine formula**.
-- Prioritize time-critical ("Urgent") orders over standard packages.
+- Prioritize time-critical ("Urgent") orders over standard packages (40% distance discount).
 - Account for urban traffic delays through a simulated multi-tier traffic model (Low 1.0x, Medium 1.2x, High 1.5x) with dynamic route recalculation.
 - Estimate fuel consumption and fuel costs in Indian Rupees (₹) based on vehicle mileage and fuel type.
 - Calculate approximate stop-by-stop arrival times (ETAs) including doorstep service durations.
@@ -37,6 +48,7 @@ Last-mile delivery is the single most expensive stage of logistics, accounting f
 8. **Interactive Driver Execution Console:** Mobile-ready driver view showing assigned orders, customer phone links, delivery sequence, status updates (`Pending` $\rightarrow$ `Out for Delivery` $\rightarrow$ `Completed`), and issue/delay reporting.
 9. **Logistics Performance Analytics:** Visual analytics dashboard tracking On-Time Rate, Completion Rate, Vehicle Utilization, and Planned vs. Actual Variance.
 10. **Fleet Administration & Config Hub:** Manage user accounts, tune global logistics parameters (fuel prices, city speed), inspect dispatch audit logs, and restore sample datasets.
+11. **Interactive Web Documentation Portal:** Complete documentation page accessible in browser over HTTP/HTTPS at `/docs.html`.
 
 ---
 
@@ -45,9 +57,9 @@ Last-mile delivery is the single most expensive stage of logistics, accounting f
 | Layer | Technologies |
 |---|---|
 | **Frontend** | HTML5, CSS3 (Flexbox & CSS Grid, Responsive), Vanilla JavaScript (ES6+ Fetch API) |
-| **Backend** | Node.js, Express.js (Modular REST API Architecture) |
+| **Backend** | Node.js, Express.js (Modular REST API Architecture, Serverless compatible) |
 | **Database** | MongoDB, Mongoose ODM |
-| **Mapping** | Leaflet.js, OpenStreetMap Tiles (100% Free & Open-Source) |
+| **Mapping** | Leaflet.js, OpenStreetMap Vector Tiles (100% Free & Open-Source) |
 | **Security** | bcryptjs (Password Hashing), jsonwebtoken (JWT Auth), dotenv (Environment Isolation) |
 
 *Zero complex frameworks (No React, Angular, Vue, Redux, Docker, or Kubernetes required).*
@@ -59,7 +71,7 @@ Last-mile delivery is the single most expensive stage of logistics, accounting f
 ┌─────────────────────────────────────────────────────────────┐
 │                 FRONTEND (Vanilla HTML/CSS/JS)              │
 │  Login │ Dashboard │ Deliveries │ Vehicles │ Route Planner  │
-│  Driver Panel │ Analytics │ Admin Central Console           │
+│  Driver Panel │ Analytics │ Admin Central Hub │ Docs Portal │
 └──────────────────────────────┬──────────────────────────────┘
                                │  REST API calls (fetch + JWT)
                                ▼
@@ -97,11 +109,13 @@ SMART ROUTE OPTIMIZATION SYSTEM FOR LAST-MILE DELIVERY/
 │   ├── driver-panel.html       # Driver live execution console & roster tabs
 │   ├── analytics.html          # Fleet performance KPIs & variance analytics
 │   ├── admin.html              # Central administration & global config hub
+│   ├── docs.html               # Comprehensive web documentation portal (HTTPS)
 │   │
 │   ├── css/
 │   │   └── style.css           # Modular, responsive stylesheet
 │   │
 │   └── js/
+│       ├── config.js           # Smart environment & API base URL handler
 │       ├── auth.js             # Session & JWT token management
 │       ├── dashboard.js        # Live stream telemetry & KPI cards
 │       ├── deliveries.js       # Deliveries CRUD fetch module
@@ -113,9 +127,13 @@ SMART ROUTE OPTIMIZATION SYSTEM FOR LAST-MILE DELIVERY/
 │
 ├── backend/
 │   ├── server.js               # Express server entry point & auto-seeder
+│   ├── vercel.json             # Vercel serverless deployment config
 │   ├── package.json            # Dependencies & scripts
 │   ├── .env                    # Local environment variables (Port, MongoDB URI)
 │   ├── .env.example            # Environment template
+│   │
+│   ├── api/
+│   │   └── index.js            # Vercel serverless entry proxy
 │   │
 │   ├── config/
 │   │   └── db.js               # Mongoose MongoDB connection module
@@ -170,98 +188,63 @@ SMART ROUTE OPTIMIZATION SYSTEM FOR LAST-MILE DELIVERY/
 
 ---
 
-## 🧮 Route Optimization Logic
-The system implements a **Priority-Aware Nearest Neighbor Algorithm**:
-1. Departure begins from the driver's current coordinates.
-2. At each iteration, all unvisited delivery orders are evaluated using their straight-line **Haversine** distance.
-3. An **Urgent Priority Weighting Discount (0.6x)** is applied:
-   $$\text{Effective Distance} = \text{Raw Haversine Distance} \times (\text{isUrgent} ? 0.6 : 1.0)$$
-4. The candidate with the lowest effective cost is selected as the next stop.
-5. The algorithm repeats until all selected stops are sequenced.
+## 🧮 Route Optimization Logic & Mathematical Formulations
 
-### Route Scoring Formula
+### 1. Haversine Distance Formula
+$$\Delta \phi = \text{lat}_2 - \text{lat}_1 \quad (\text{radians})$$
+$$\Delta \lambda = \text{lon}_2 - \text{lon}_1 \quad (\text{radians})$$
+$$a = \sin^2\left(\frac{\Delta \phi}{2}\right) + \cos(\text{lat}_1) \cdot \cos(\text{lat}_2) \cdot \sin^2\left(\frac{\Delta \lambda}{2}\right)$$
+$$c = 2 \cdot \text{atan2}(\sqrt{a}, \sqrt{1-a})$$
+$$d = 6,371 \cdot c \quad (\text{km})$$
+
+### 2. Priority Nearest Neighbor Algorithm
+$$\text{Effective Distance} = \text{Raw Haversine Distance} \times (\text{isUrgent} ? 0.6 : 1.0)$$
+- An urgent stop 10 km away is treated as 6 km, ensuring drivers prioritize urgent orders over standard stops unless standard stops are directly adjacent.
+
+### 3. Traffic-Aware Speed & ETA
+$$\text{Effective Transit Speed} = \frac{\text{Base Speed (35 km/h)}}{\text{Traffic Factor (1.0, 1.2, or 1.5)}}$$
+$$\text{Driving Time (mins)} = \left(\frac{\text{Distance}}{\text{Effective Speed}}\right) \times 60$$
+$$\text{Service Time (mins)} = \text{Stops Count} \times 5\text{ mins (handover)}$$
+$$\text{Total Duration} = \text{Driving Time} + \text{Service Time}$$
+
+### 4. Fuel Consumption & Cost
+$$\text{Fuel Consumed} = \frac{\text{Total Distance (km)}}{\text{Vehicle Mileage (km/L)}}$$
+$$\text{Total Fuel Cost} = \text{Fuel Consumed} \times \text{Unit Fuel Price (₹)}$$
+$$\text{Cost Per Delivery} = \frac{\text{Total Fuel Cost}}{\text{Stops Count}}$$
+
+### 5. Composite Route Scoring Formula
 $$\text{Route Score} = (\text{Distance} \times 1.5) + \text{Traffic Penalty} + \text{Fuel Cost} - \text{Priority Bonus}$$
 - $\text{Traffic Penalty} = (\text{Traffic Factor} - 1.0) \times 25.0$
 - $\text{Priority Bonus} = \text{Urgent Orders Count} \times 15.0$
-*(Lower Route Score indicates higher cost-efficiency and delivery punctuality).*
+*(Lower score represents a more cost-effective sequence).*
 
 ---
 
-## 🚦 Traffic Handling
-Traffic is simulated using standardized multipliers:
-- **LOW Traffic:** $1.0\times$ (Free-flow urban transit, base speed $35\text{ km/h}$)
-- **MEDIUM Traffic:** $1.2\times$ (Normal urban daytime traffic, effective speed $\approx 29.2\text{ km/h}$)
-- **HIGH Traffic:** $1.5\times$ (Peak congestion, effective speed $\approx 23.3\text{ km/h}$)
+## 📡 Complete REST API Reference
 
-**Dynamic Recalculation:** If traffic worsens during active transit, clicking **"Recalculate Route"** updates driving times, delays, and stop ETAs in real-time.
-
----
-
-## ⛽ Fuel Calculation
-$$\text{Fuel Consumed} = \frac{\text{Route Distance (km)}}{\text{Vehicle Mileage (km/L)}}$$
-$$\text{Total Fuel Cost} = \text{Fuel Consumed} \times \text{Unit Fuel Price (₹)}$$
-$$\text{Cost Per Stop} = \frac{\text{Total Fuel Cost}}{\text{Number of Deliveries}}$$
-
-Configurable unit prices (default):
-- **Petrol:** ₹104.0 / Litre
-- **Diesel:** ₹91.0 / Litre
-- **Electric (EV):** ₹8.5 / kWh unit equivalent
-
----
-
-## ⏰ ETA Calculation
-$$\text{Driving Duration (mins)} = \left(\frac{\text{Distance}}{\text{Effective Speed}}\right) \times 60$$
-$$\text{Service Duration (mins)} = \text{Stops Count} \times 5\text{ mins (handover)}$$
-$$\text{Total Duration (mins)} = \text{Driving Duration} + \text{Service Duration}$$
-$$\text{Final Stop ETA} = \text{Departure Time} + \text{Total Duration}$$
-
-Stop-by-stop cumulative arrival and departure times are calculated incrementally for every point on the route.
-
----
-
-## 📡 API Endpoints
-
-### Authentication
-- `POST /api/auth/login` — Authenticate user and return JWT token
-- `POST /api/auth/register` — Register a new user account
-- `GET /api/auth/me` — Verify token and get profile
-- `GET /api/auth/users` — Get all users (Admin view)
-- `POST /api/auth/seed-reset` — Restore default Pune logistics sample dataset
-
-### Deliveries
-- `GET /api/deliveries` — List all orders (with driver/vehicle populated)
-- `POST /api/deliveries` — Create a new delivery order
-- `GET /api/deliveries/:id` — Retrieve single delivery details
-- `PUT /api/deliveries/:id` — Update order details
-- `PUT /api/deliveries/:id/status` — Update delivery status (`out_for_delivery`, `completed`, `failed`)
-- `POST /api/deliveries/:id/issue` — Report logistics delay or failure reason
-- `DELETE /api/deliveries/:id` — Delete order
-
-### Drivers & Vehicles
-- `GET /api/drivers` / `POST /api/drivers` / `PUT /api/drivers/:id` / `DELETE /api/drivers/:id`
-- `GET /api/vehicles` / `POST /api/vehicles` / `PUT /api/vehicles/:id` / `DELETE /api/vehicles/:id`
-
-### Route Planning & Optimization
-- `GET /api/routes/data` — Fetch active drivers, available vehicles, and pending orders
-- `POST /api/routes/preview` — Preview optimized route without saving
-- `POST /api/routes/optimize` — Run optimization, persist route, and assign driver/vehicle
-- `POST /api/routes/:id/recalculate` — Dynamically recompute route under new traffic condition
-- `GET /api/routes/driver/:driverId` — Fetch active route assigned to a driver
-- `GET /api/routes/:id` — Get route details
-- `GET /api/routes` — List all saved routes
-
-### Dashboard & Analytics
-- `GET /api/dashboard/summary` — Aggregate live KPI metrics and telemetry
-- `GET /api/analytics` — Compute on-time rates, completion rates, vehicle utilization, and variance
-
----
-
-## 📦 Database Models
-1. **User:** `name`, `email`, `password` (hashed), `role` (`admin` | `driver`), `phone`, `createdAt`.
-2. **Delivery:** `orderId`, `customerName`, `customerPhone`, `deliveryAddress`, `latitude`, `longitude`, `priority` (`urgent` | `standard`), `timeWindowStart`, `timeWindowEnd`, `packageWeight`, `packageSize`, `assignedDriver`, `assignedVehicle`, `status`, `plannedETA`, `actualDeliveryTime`, `failureReason`, `notes`.
-3. **Driver:** `name`, `phone`, `email`, `licenseNumber`, `assignedVehicle`, `availability`, `currentLatitude`, `currentLongitude`, `completedDeliveries`, `failedDeliveries`, `onTimeDeliveries`.
-4. **Vehicle:** `vehicleNumber`, `vehicleType`, `fuelType`, `mileage`, `fuelTankCapacity`, `loadCapacity`, `assignedDriver`, `availability`.
-5. **Route:** `routeId`, `driver`, `vehicle`, `trafficCondition`, `trafficFactor`, `totalDistanceKm`, `totalDurationMinutes`, `estimatedETA`, `estimatedFuelLiters`, `estimatedFuelCost`, `routeScore`, `stops` (ordered array), `status`.
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/auth/login` | Authenticate user & return JWT token |
+| `POST` | `/api/auth/register` | Register new fleet user account |
+| `GET` | `/api/auth/me` | Verify token & return logged-in profile |
+| `GET` | `/api/auth/users` | List all system users (Admin view) |
+| `POST` | `/api/auth/seed-reset` | Restore default demonstration logistics dataset |
+| `GET` | `/api/deliveries` | List all delivery orders |
+| `POST` | `/api/deliveries` | Create a new delivery order |
+| `PUT` | `/api/deliveries/:id/status` | Update delivery status (`out_for_delivery`, `completed`, `failed`) |
+| `POST` | `/api/deliveries/:id/issue` | Log field delay/issue report |
+| `DELETE` | `/api/deliveries/:id` | Remove delivery order |
+| `GET` | `/api/drivers` | Retrieve all drivers roster |
+| `POST` | `/api/drivers` | Add driver to fleet |
+| `GET` | `/api/vehicles` | Retrieve fleet vehicle list |
+| `POST` | `/api/vehicles` | Add new vehicle to fleet |
+| `GET` | `/api/routes/data` | Fetch active drivers, vehicles, and pending orders for planner |
+| `POST` | `/api/routes/preview` | Preview optimized route without saving |
+| `POST` | `/api/routes/optimize` | Run optimization, save route, and assign driver/vehicle |
+| `POST` | `/api/routes/:id/recalculate` | Dynamically recompute route when traffic changes |
+| `GET` | `/api/routes/driver/:driverId` | Fetch active assigned route for a specific driver |
+| `GET` | `/api/analytics` | Compute fleet KPIs, completion rates, and variance metrics |
+| `GET` | `/api/dashboard/summary` | Retrieve live aggregated dashboard metrics |
 
 ---
 
@@ -269,9 +252,9 @@ Stop-by-stop cumulative arrival and departure times are calculated incrementally
 
 ### Prerequisites
 - [Node.js](https://nodejs.org/) ($\ge 18.x$)
-- [MongoDB](https://www.mongodb.com/) (Local service or MongoDB Atlas connection URI)
+- [MongoDB](https://www.mongodb.com/) (Local service or MongoDB Atlas cloud URI)
 
-### Setup Steps
+### Local Setup
 1. **Clone the repository:**
    ```bash
    git clone <your-repo-url>
@@ -285,79 +268,52 @@ Stop-by-stop cumulative arrival and departure times are calculated incrementally
    ```
 
 3. **Configure Environment Variables:**
-   Create a `.env` file inside the `backend/` directory:
+   Create a `.env` file in `backend/`:
    ```env
    PORT=5000
    MONGODB_URI=mongodb://127.0.0.1:27017/smart_route_db
    JWT_SECRET=smart_route_secret_key_super_secure_2026
    ```
 
-4. **Launch the server:**
+4. **Start the server:**
    ```bash
-   npm start
-   # or with live reloading:
-   npm run dev
+   node server.js
    ```
 
-5. **Open the Application:**
-   Navigate in your browser to:
-   ```
-   http://localhost:5000/login.html
-   ```
+5. **Open in browser:**
+   - Application: `http://localhost:5000/login.html`
+   - Documentation Portal: `http://localhost:5000/docs.html`
 
 ---
 
-## 🔐 Default Demo Accounts
+## 🔐 Demo Credentials
 
-| Role | Email | Password | Access |
+| Role | Email | Password | Access Scope |
 |---|---|---|---|
-| **Fleet Manager / Admin** | `admin@lastmile.com` | `admin123` | Full system access to all 8 modules |
-| **Delivery Driver** | `rahul@lastmile.com` | `driver123` | Driver dispatch console & task execution |
-
-*(Both accounts and realistic Pune logistics sample data are auto-seeded on initial server launch).*
+| **Fleet Manager / Admin** | `admin@lastmile.com` | `admin123` | Full access to all 8 modules & settings |
+| **Delivery Driver** | `rahul@lastmile.com` | `driver123` | Driver task console & delivery execution |
 
 ---
 
-## 📸 Screenshots
-Real captures of all functional application views are saved in the [`screenshots/`](./screenshots) folder:
-- **Login Portal:** [`screenshots/01-login.png`](./screenshots)
-- **Operations Dashboard:** [`screenshots/02-dashboard.png`](./screenshots)
-- **Deliveries Management:** [`screenshots/03-deliveries.png`](./screenshots)
-- **Fleet Vehicles:** [`screenshots/04-vehicles.png`](./screenshots)
-- **Route Planner & Leaflet Map:** [`screenshots/05-route-planner.png`](./screenshots)
-- **Driver Dispatch Console:** [`screenshots/06-driver-panel.png`](./screenshots)
-- **Performance Analytics:** [`screenshots/07-analytics.png`](./screenshots)
-- **Admin Command Hub:** [`screenshots/08-admin.png`](./screenshots)
+## 🌐 Production Cloud Deployment Guide
+
+### Option A: Vercel (Current Production Deployment)
+- **Live Application:** [https://smart-route-optimization-system-for.vercel.app/login.html](https://smart-route-optimization-system-for.vercel.app/login.html)
+- **Live Documentation:** [https://smart-route-optimization-system-for.vercel.app/docs.html](https://smart-route-optimization-system-for.vercel.app/docs.html)
+- **Environment variables on Vercel:**
+  - `MONGODB_URI`: Your MongoDB Atlas URI
+  - `JWT_SECRET`: Your production secret
+- The included `frontend/js/config.js` automatically routes API requests seamlessly.
+
+### Option B: Render (Unified Web Service)
+1. Create a **Web Service** on [Render](https://render.com/).
+2. Root directory: `backend`, Build Command: `npm install`, Start Command: `node server.js`.
+3. Render automatically hosts the backend and serves the frontend static files together.
 
 ---
 
-## 🌐 Deployment Guide
-
-### Database (MongoDB Atlas)
-1. Create a free cluster on [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
-2. Create a database user and allow network access (`0.0.0.0/0`).
-3. Copy the Atlas connection string into your backend `.env` as `MONGODB_URI`.
-
-### Backend (Render)
-1. Create a new **Web Service** on [Render](https://render.com/).
-2. Point to the repository with **Root Directory** set to `backend`.
-3. Set **Build Command:** `npm install` and **Start Command:** `node server.js`.
-4. Add environment variables: `PORT=5000`, `MONGODB_URI`, `JWT_SECRET`.
-
-### Frontend (Netlify / Vercel / Render Static)
-Since the Express backend is already configured to serve the `frontend/` static assets directly via `app.use(express.static('../frontend'))`, deploying the backend web service on Render automatically serves the full frontend web application!
-
----
-
-## 🔮 Future Enhancements
-- Turn-by-turn road geometry using Open Source Routing Machine (OSRM).
-- Live driver GPS location telemetry via WebSocket streaming.
-- Multi-vehicle capacity partitioning (Capacitated Vehicle Routing Problem).
-- Automated SMS/WhatsApp customer arrival notifications.
-- Carbon emission footprint tracker ($CO_2\text{ kg}$ saved).
-
----
-
-## 👨‍💻 Author
-Developed as a Student-Level MVP for Last-Mile Logistics Optimization.
-Project completed over a structured 6-day engineering lifecycle.
+## 👨‍💻 Author & Academic Project Details
+- **Project Title:** SMART ROUTE OPTIMIZATION SYSTEM FOR LAST-MILE DELIVERY
+- **Domain:** Logistics & Supply Chain Engineering / Web Systems
+- **Development Lifecycle:** Structured 6-Day Agile Development Plan
+- **Documentation:** Built-in web documentation accessible at `/docs.html`
