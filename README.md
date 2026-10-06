@@ -1,298 +1,857 @@
-Smart Route Optimization System for Last-Mile Delivery
-A complete, full-stack last-mile logistics and route optimization web application designed for fleet managers and delivery drivers. Built using beginner-friendly vanilla web technologies (Node.js, Express, MongoDB, Leaflet, and HTML5/CSS3/Vanilla JS).
-🌐 Live Application & Web Documentation (HTTPS)
-- Live Application Deployment (Production):
-  https://smart-route-optimization-system-for.vercel.app/login.html
-- Interactive System Documentation Portal (Web / HTTPS):
-  https://smart-route-optimization-system-for.vercel.app/docs.html (or local: http://localhost:5000/docs.html)
-- Product Requirements Document (PRD):
-  [`docs/PRD.md`](./docs/PRD.md)
-📌 Problem Statement
-Last-mile delivery is the single most expensive stage of logistics, accounting for more than 53% of total transport expenses. Urban delivery operations suffer from:
-- Inefficient manual stop sequencing and excessive backtracking.
-- Traffic congestion causing delivery delays and missed customer time windows.
-- Uncontrolled fuel consumption cutting into profit margins.
-- Poor coordination between fleet dispatchers and field drivers.
-- Lack of performance analytics and key operational metrics.
-🎯 Objectives
-- Provide an intuitive multi-stop route planner that sequences delivery stops efficiently.
-- Calculate accurate geographical distances using the mathematical Haversine formula.
-- Prioritize time-critical ("Urgent") orders over standard packages (40% distance discount).
-- Account for urban traffic delays through a simulated multi-tier traffic model (Low 1.0x, Medium 1.2x, High 1.5x) with dynamic route recalculation.
-- Estimate fuel consumption and fuel costs in Indian Rupees (₹) based on vehicle mileage and fuel type.
-- Calculate approximate stop-by-stop arrival times (ETAs) including doorstep service durations.
-- Provide a responsive driver portal for task execution, customer contact, and delivery status updates.
-- Track fleet logistics KPIs (On-Time Delivery Rate, Completion Rate, Vehicle Utilization, and Planned vs. Actual Variance).
-✨ Features
-1. Role-Based Authentication: Clean login with Admin/Fleet Manager and Driver roles, with bcrypt password hashing and JWT sessions.
-2. Delivery Order Management: Complete CRUD interface to create, edit, filter, and delete delivery orders with priority, weight, and delivery time windows.
-3. Driver Roster & Status Management: Track driver licenses, assigned vehicles, on-time delivery counts, and availability states (available, on_duty, off_duty).
-4. Fleet Vehicle Tracking: Manage vans, bikes, and trucks across Petrol, Diesel, and Electric fuel types with custom mileage parameters.
-5. Interactive Leaflet + OpenStreetMap: Visual map displaying driver origin, numbered stops, and traffic-colored route lines without any paid Google Maps API keys.
-6. Smart Route Optimizer: Priority-aware Nearest Neighbor algorithm with multi-factor route scoring.
-7. Dynamic Traffic Recalculation: Simulate live traffic shifts during active transit and recalculate ETAs, fuel costs, and route scores with one click.
-8. Interactive Driver Execution Console: Mobile-ready driver view showing assigned orders, customer phone links, delivery sequence, status updates (Pending $\rightarrow$ Out for Delivery $\rightarrow$ Completed), and issue/delay reporting.
-9. Logistics Performance Analytics: Visual analytics dashboard tracking On-Time Rate, Completion Rate, Vehicle Utilization, and Planned vs. Actual Variance.
-10. Fleet Administration & Config Hub: Manage user accounts, tune global logistics parameters (fuel prices, city speed), inspect dispatch audit logs, and restore sample datasets.
-11. Interactive Web Documentation Portal: Complete documentation page accessible in browser over HTTP/HTTPS at /docs.html.
-🛠️ Technology Stack
-Layer	Technologies
-Frontend	HTML5, CSS3 (Flexbox & CSS Grid, Responsive), Vanilla JavaScript (ES6+ Fetch API)
-Backend	Node.js, Express.js (Modular REST API Architecture, Serverless compatible)
-Database	MongoDB, Mongoose ODM
-Mapping	Leaflet.js, OpenStreetMap Vector Tiles (100% Free & Open-Source)
-Security	bcryptjs (Password Hashing), jsonwebtoken (JWT Auth), dotenv (Environment Isolation)
+# 🚚 Smart Route Optimization System for Last-Mile Delivery
 
+A complete full-stack **Last-Mile Delivery and Route Optimization System** designed to help fleet managers efficiently manage deliveries, drivers, vehicles, routes, traffic conditions, fuel costs, and logistics performance.
 
-Zero complex frameworks (No React, Angular, Vue, Redux, Docker, or Kubernetes required).
-🏗️ Architecture
+The system provides **role-based access for Fleet Managers/Admins and Delivery Drivers**, along with route optimization, interactive maps, delivery tracking, analytics, and fleet management.
+
+---
+
+## 🌐 Live Application
+
+### 🚀 Live Demo
+
+👉 **[Open Smart Route Optimization System](https://smart-route-optimization-system-for.vercel.app/login.html)**
+
+### 📚 Web Documentation
+
+👉 **[View Project Documentation](https://smart-route-optimization-system-for.vercel.app/docs.html)**
+
+### 📄 Product Requirements Document
+
+[View PRD](./docs/PRD.md)
+
+---
+
+# 📌 Problem Statement
+
+Last-mile delivery is one of the most challenging and expensive parts of logistics operations.
+
+Delivery companies often face problems such as:
+
+- Inefficient manual route planning
+- Excessive travel distance
+- Traffic-related delivery delays
+- High fuel consumption
+- Poor vehicle utilization
+- Difficult driver coordination
+- Lack of real-time delivery monitoring
+- Limited logistics performance analytics
+
+The **Smart Route Optimization System** addresses these problems by providing a centralized platform for route planning, fleet management, driver management, delivery tracking, and logistics analytics.
+
+---
+
+# 🎯 Objectives
+
+The main objectives of this project are:
+
+- Optimize multi-stop delivery routes.
+- Reduce unnecessary travel distance.
+- Improve delivery efficiency.
+- Prioritize urgent deliveries.
+- Consider traffic conditions during route planning.
+- Estimate fuel consumption and fuel costs.
+- Assign drivers and vehicles efficiently.
+- Track delivery status.
+- Monitor active delivery operations.
+- Provide useful logistics analytics.
+- Improve fleet and driver productivity.
+
+---
+
+# ✨ Key Features
+
+### 🔐 1. Role-Based Authentication
+
+- Admin/Fleet Manager login
+- Driver login
+- JWT-based authentication
+- Password hashing using bcrypt
+- Protected API routes
+
+### 📦 2. Delivery Management
+
+- Create deliveries
+- Update deliveries
+- Delete deliveries
+- Set delivery priority
+- Set delivery weight
+- Set delivery time windows
+- Track delivery status
+- Report delivery issues
+
+### 🚚 3. Fleet Vehicle Management
+
+Manage company fleet vehicles including:
+
+- Vehicle number
+- Vehicle type
+- Vehicle capacity
+- Fuel type
+- Mileage
+- Assigned driver
+- Vehicle availability/status
+
+Supported vehicle examples:
+
+- 🚗 Cars
+- 🏍️ Bikes
+- 🚐 Vans
+- 🚚 Trucks
+
+### 👨‍✈️ 4. Driver Management
+
+Fleet managers can:
+
+- Add drivers
+- View driver details
+- Assign vehicles
+- Track driver availability
+- View assigned routes
+- Monitor delivery progress
+
+### 🗺️ 5. Route Optimization
+
+The system provides:
+
+- Multi-stop route planning
+- Haversine distance calculation
+- Priority-aware route optimization
+- Nearest Neighbor algorithm
+- Route scoring
+- Optimized delivery sequence
+- Interactive map visualization
+
+### 🚦 6. Traffic-Aware Routing
+
+The system simulates different traffic levels:
+
+| Traffic | Factor |
+|---|---:|
+| 🟢 Low | 1.0x |
+| 🟡 Medium | 1.2x |
+| 🔴 High | 1.5x |
+
+Traffic conditions affect:
+
+- Estimated travel time
+- ETA
+- Route score
+- Delivery planning
+
+### ⛽ 7. Fuel Estimation
+
+The system calculates:
+
+- Estimated fuel consumption
+- Fuel cost
+- Cost per delivery
+
+Based on:
+
+- Route distance
+- Vehicle mileage
+- Fuel type
+- Fuel price
+
+### 📍 8. Driver Panel
+
+Drivers can:
+
+- View assigned deliveries
+- View optimized route
+- View delivery sequence
+- Update delivery status
+- Contact customers
+- Report delivery issues
+- Track assigned route
+
+### 📊 9. Analytics Dashboard
+
+The analytics module provides:
+
+- On-Time Delivery Rate
+- Completion Rate
+- Vehicle Utilization
+- Planned vs Actual Distance
+- Route performance
+- Delivery performance
+
+### ⚙️ 10. Admin Panel
+
+Administrators can:
+
+- Manage users
+- Manage fleet configuration
+- Manage system parameters
+- View routes
+- Manage drivers
+- Manage vehicles
+- Restore sample data
+
+---
+
+# 🛠️ Technology Stack
+
+| Layer | Technologies |
+|---|---|
+| **Frontend** | HTML5, CSS3, JavaScript |
+| **Styling** | CSS3, Flexbox, CSS Grid |
+| **Backend** | Node.js, Express.js |
+| **Database** | MongoDB |
+| **ODM** | Mongoose |
+| **Authentication** | JWT, bcryptjs |
+| **Maps** | Leaflet.js, OpenStreetMap |
+| **API Communication** | REST API, Fetch API |
+| **Deployment** | Vercel |
+| **Version Control** | Git, GitHub |
+
+### No React
+
+This project intentionally uses:
+
+- HTML
+- CSS
+- Vanilla JavaScript
+- Node.js
+- Express.js
+- MongoDB
+
+No React, Angular, Vue, or TypeScript is required.
+
+---
+
+# 🏗️ System Architecture
+
+```text
 ┌─────────────────────────────────────────────────────────────┐
-│                 FRONTEND (Vanilla HTML/CSS/JS)              │
-│  Login │ Dashboard │ Deliveries │ Vehicles │ Route Planner  │
-│  Driver Panel │ Analytics │ Admin Central Hub │ Docs Portal │
-└──────────────────────────────┬──────────────────────────────┘
-                               │  REST API calls (fetch + JWT)
-                               ▼
+│                  FRONTEND                                  │
+│             HTML5 + CSS3 + JavaScript                      │
+│                                                             │
+│ Login | Dashboard | Deliveries | Vehicles | Route Planner  │
+│ Driver Panel | Analytics | Admin                           │
+└─────────────────────────────┬───────────────────────────────┘
+                              │
+                              │ REST API + JWT
+                              ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                 BACKEND (Node.js & Express.js)              │
-│  ├── Auth & JWT Middleware                                  │
-│  ├── Delivery, Driver & Vehicle CRUD Handlers               │
-│  ├── Route Optimizer Engine (Nearest Neighbor + Priority)   │
-│  ├── Haversine Distance & Distance Matrix Calculator        │
-│  ├── Fuel Consumption & Cost Modeling Engine                │
-│  ├── Traffic Simulator & Stop-by-Stop ETA Calculator        │
-│  └── Analytics & Logistics KPI Aggregator                   │
-└──────────────────────────────┬──────────────────────────────┘
-                               │  Mongoose ODM
-                               ▼
+│                    BACKEND                                 │
+│                 Node.js + Express.js                       │
+│                                                             │
+│ Authentication                                              │
+│ Delivery Management                                         │
+│ Driver Management                                           │
+│ Vehicle Management                                          │
+│ Route Optimization                                          │
+│ Traffic Simulation                                          │
+│ Fuel Calculation                                            │
+│ ETA Calculation                                             │
+│ Analytics                                                   │
+└─────────────────────────────┬───────────────────────────────┘
+                              │
+                              │ Mongoose
+                              ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                      DATABASE (MongoDB)                     │
-│  Users │ Deliveries │ Drivers │ Vehicles │ Routes │ Batches │
+│                    DATABASE                                │
+│                    MongoDB                                 │
+│                                                             │
+│ Users | Deliveries | Drivers | Vehicles | Routes           │
 └─────────────────────────────────────────────────────────────┘
-📂 Project Structure
+```
+
+---
+
+# 📂 Project Structure
+
+```text
 SMART ROUTE OPTIMIZATION SYSTEM FOR LAST-MILE DELIVERY/
 │
 ├── frontend/
-│   ├── index.html              # Gateway session router
-│   ├── login.html              # Authentication portal with demo auto-fills
-│   ├── dashboard.html          # Operations dashboard with live delivery stream
-│   ├── deliveries.html         # Delivery order management & CRUD modal
-│   ├── vehicles.html           # Fleet vehicle management & driver assignment
-│   ├── route-planner.html      # Interactive Leaflet map & route optimization
-│   ├── driver-panel.html       # Driver live execution console & roster tabs
-│   ├── analytics.html          # Fleet performance KPIs & variance analytics
-│   ├── admin.html              # Central administration & global config hub
-│   ├── docs.html               # Comprehensive web documentation portal (HTTPS)
+│   │
+│   ├── index.html
+│   ├── login.html
+│   ├── dashboard.html
+│   ├── deliveries.html
+│   ├── vehicles.html
+│   ├── route-planner.html
+│   ├── driver-panel.html
+│   ├── analytics.html
+│   ├── admin.html
+│   ├── docs.html
 │   │
 │   ├── css/
-│   │   └── style.css           # Modular, responsive stylesheet
+│   │   └── style.css
 │   │
 │   └── js/
-│       ├── config.js           # Smart environment & API base URL handler
-│       ├── auth.js             # Session & JWT token management
-│       ├── dashboard.js        # Live stream telemetry & KPI cards
-│       ├── deliveries.js       # Deliveries CRUD fetch module
-│       ├── vehicles.js         # Fleet vehicle CRUD & assignment
-│       ├── route.js            # Route optimizer, traffic & Leaflet map engine
-│       ├── driver.js           # Driver task execution & status lifecycle
-│       ├── analytics.js        # Logistics analytics & KPI distribution
-│       └── admin.js            # User management & parameter config
+│       ├── config.js
+│       ├── auth.js
+│       ├── dashboard.js
+│       ├── deliveries.js
+│       ├── vehicles.js
+│       ├── route.js
+│       ├── driver.js
+│       ├── analytics.js
+│       └── admin.js
 │
 ├── backend/
-│   ├── server.js               # Express server entry point & auto-seeder
-│   ├── vercel.json             # Vercel serverless deployment config
-│   ├── package.json            # Dependencies & scripts
-│   ├── .env                    # Local environment variables (Port, MongoDB URI)
-│   ├── .env.example            # Environment template
+│   │
+│   ├── server.js
+│   ├── package.json
+│   ├── vercel.json
+│   ├── .env
+│   ├── .env.example
 │   │
 │   ├── api/
-│   │   └── index.js            # Vercel serverless entry proxy
+│   │   └── index.js
 │   │
 │   ├── config/
-│   │   └── db.js               # Mongoose MongoDB connection module
+│   │   └── db.js
 │   │
 │   ├── models/
-│   │   ├── User.js             # User credentials & role schema
-│   │   ├── Delivery.js         # Delivery order schema with coordinates & priority
-│   │   ├── Driver.js           # Driver roster & availability schema
-│   │   ├── Vehicle.js          # Fleet vehicle specs, fuel & mileage schema
-│   │   └── Route.js            # Persisted optimized multi-stop route schema
+│   │   ├── User.js
+│   │   ├── Delivery.js
+│   │   ├── Driver.js
+│   │   ├── Vehicle.js
+│   │   └── Route.js
 │   │
 │   ├── routes/
-│   │   ├── authRoutes.js       # Login, register, me, users, seed-reset
-│   │   ├── dashboardRoutes.js  # Dashboard aggregation summary
-│   │   ├── deliveryRoutes.js   # Delivery CRUD, status transitions & issue log
-│   │   ├── driverRoutes.js     # Driver roster management
-│   │   ├── vehicleRoutes.js    # Vehicle fleet management
-│   │   ├── routeRoutes.js      # Optimization, recalculation & active lookup
-│   │   └── analyticsRoutes.js  # Logistics KPIs & variance analysis
+│   │   ├── authRoutes.js
+│   │   ├── dashboardRoutes.js
+│   │   ├── deliveryRoutes.js
+│   │   ├── driverRoutes.js
+│   │   ├── vehicleRoutes.js
+│   │   ├── routeRoutes.js
+│   │   └── analyticsRoutes.js
 │   │
 │   └── utils/
-│       ├── distanceCalculator.js # Haversine formula & distance matrix
-│       ├── etaCalculator.js      # Traffic factors & stop-by-stop ETAs
-│       ├── fuelCalculator.js     # Mileage & fuel cost calculations
-│       └── routeOptimizer.js     # Priority-aware Nearest Neighbor engine
+│       ├── distanceCalculator.js
+│       ├── etaCalculator.js
+│       ├── fuelCalculator.js
+│       └── routeOptimizer.js
 │
 ├── docs/
-│   └── PRD.md                  # Complete Product Requirements Document
+│   └── PRD.md
 │
 ├── screenshots/
-│   ├── 01-login.png             # Login page
-│   ├── 02-dashboard.png         # Operations dashboard
-│   ├── 03-deliveries.png        # Delivery management
-│   ├── 04-vehicles.png          # Fleet vehicle management
-│   ├── 05-route-planner.png     # Route planner & map
-│   ├── 06-driver-panel.png      # Driver execution panel
-│   ├── 07-analytics.png         # Fleet analytics
-│   └── 08-admin.png             # Admin management
+│   ├── 01-login.png
+│   ├── 02-dashboard.png
+│   ├── 03-deliveries.png
+│   ├── 04-vehicles.png
+│   ├── 05-route-planner.png
+│   ├── 06-driver-panel.png
+│   ├── 07-analytics.png
+│   └── 08-admin.png
 │
-├── .gitignore                  # Git ignore rules
-├── PROJECT_PROGRESS.md         # 6-Day development milestone tracker
-└── README.md                   # Complete system documentation
-📸 Application Screenshots
-The following screenshots show the main modules and user interfaces of the Smart Route Optimization System:
-## 📸 Application Screenshots
+├── PROJECT_PROGRESS.md
+├── .gitignore
+└── README.md
+```
 
-### 🔐 Login
+---
+
+# 📸 Application Screenshots
+
+## 🔐 Login
+
 ![Login](./screenshots/01-login.png)
 
-### 📊 Dashboard
+---
+
+## 📊 Dashboard
+
 ![Dashboard](./screenshots/02-dashboard.png)
 
-### 📦 Deliveries
+---
+
+## 📦 Deliveries
+
 ![Deliveries](./screenshots/03-deliveries.png)
 
-### 🚚 Fleet Vehicles
+---
+
+## 🚚 Fleet Vehicles
+
 ![Fleet Vehicles](./screenshots/04-vehicles.png)
 
-### 🗺️ Route Planner
+---
+
+## 🗺️ Route Planner
+
 ![Route Planner](./screenshots/05-route-planner.png)
 
-### 👨‍✈️ Driver Panel
+---
+
+## 👨‍✈️ Driver Panel
+
 ![Driver Panel](./screenshots/06-driver-panel.png)
 
-### 📈 Analytics
+---
+
+## 📈 Analytics
+
 ![Analytics](./screenshots/07-analytics.png)
 
-### ⚙️ Admin
-![Admin](./screenshots/08-admin.png)
-Feature / Action	Fleet Manager / Admin	Delivery Driver
-Login & View Dashboard	✅	✅
-Create & Edit Delivery Orders	✅	❌
-Manage Fleet Vehicles	✅	❌
-Manage Driver Roster	✅	❌
-Plan & Optimize Multi-Stop Routes	✅	❌
-View Assigned Route on Interactive Map	✅	✅
-Update Delivery Status (Out for Delivery, Completed)	✅	✅
-Report Delay / Logistics Issue	✅	✅
-View Analytics & Logistics KPIs	✅	❌
-System User & Parameter Administration	✅	❌
+---
 
+## ⚙️ Admin Panel
 
-🧮 Route Optimization Logic & Mathematical Formulations
-1. Haversine Distance Formula
-\(\Delta \phi = \text{lat}_2 - \text{lat}_1 \quad (\text{radians})\)
-\(\Delta \lambda = \text{lon}_2 - \text{lon}_1 \quad (\text{radians})\)
-\(a = \sin^2\left(\frac{\Delta \phi}{2}\right) + \cos(\text{lat}_1) \cdot \cos(\text{lat}_2) \cdot \sin^2\left(\frac{\Delta \lambda}{2}\right)\)
-\(c = 2 \cdot \text{atan2}(\sqrt{a}, \sqrt{1-a})\)
-\(d = 6,371 \cdot c \quad (\text{km})\)
-2. Priority Nearest Neighbor Algorithm
-\(\text{Effective Distance} = \text{Raw Haversine Distance} \times (\text{isUrgent} ? 0.6 : 1.0)\)
-- An urgent stop 10 km away is treated as 6 km, ensuring drivers prioritize urgent orders over standard stops unless standard stops are directly adjacent.
-3. Traffic-Aware Speed & ETA
-\(\text{Effective Transit Speed} = \frac{\text{Base Speed (35 km/h)}}{\text{Traffic Factor (1.0, 1.2, or 1.5)}}\)
-\(\text{Driving Time (mins)} = \left(\frac{\text{Distance}}{\text{Effective Speed}}\right) \times 60\)
-\(\text{Service Time (mins)} = \text{Stops Count} \times 5\text{ mins (handover)}\)
-\(\text{Total Duration} = \text{Driving Time} + \text{Service Time}\)
-4. Fuel Consumption & Cost
-\(\text{Fuel Consumed} = \frac{\text{Total Distance (km)}}{\text{Vehicle Mileage (km/L)}}\)
-\(\text{Total Fuel Cost} = \text{Fuel Consumed} \times \text{Unit Fuel Price (₹)}\)
-\(\text{Cost Per Delivery} = \frac{\text{Total Fuel Cost}}{\text{Stops Count}}\)
-5. Composite Route Scoring Formula
-\(\text{Route Score} = (\text{Distance} \times 1.5) + \text{Traffic Penalty} + \text{Fuel Cost} - \text{Priority Bonus}\)
-- $\text{Traffic Penalty} = (\text{Traffic Factor} - 1.0) \times 25.0$
-- $\text{Priority Bonus} = \text{Urgent Orders Count} \times 15.0$
-  (Lower score represents a more cost-effective sequence).
-📡 Complete REST API Reference
-Method	Endpoint	Description
-POST	/api/auth/login	Authenticate user & return JWT token
-POST	/api/auth/register	Register new fleet user account
-GET	/api/auth/me	Verify token & return logged-in profile
-GET	/api/auth/users	List all system users (Admin view)
-POST	/api/auth/seed-reset	Restore default demonstration logistics dataset
-GET	/api/deliveries	List all delivery orders
-POST	/api/deliveries	Create a new delivery order
-PUT	/api/deliveries/:id/status	Update delivery status (out_for_delivery, completed, failed)
-POST	/api/deliveries/:id/issue	Log field delay/issue report
-DELETE	/api/deliveries/:id	Remove delivery order
-GET	/api/drivers	Retrieve all drivers roster
-POST	/api/drivers	Add driver to fleet
-GET	/api/vehicles	Retrieve fleet vehicle list
-POST	/api/vehicles	Add new vehicle to fleet
-GET	/api/routes/data	Fetch active drivers, vehicles, and pending orders for planner
-POST	/api/routes/preview	Preview optimized route without saving
-POST	/api/routes/optimize	Run optimization, save route, and assign driver/vehicle
-POST	/api/routes/:id/recalculate	Dynamically recompute route when traffic changes
-GET	/api/routes/driver/:driverId	Fetch active assigned route for a specific driver
-GET	/api/analytics	Compute fleet KPIs, completion rates, and variance metrics
-GET	/api/dashboard/summary	Retrieve live aggregated dashboard metrics
+![Admin Panel](./screenshots/08-admin.png)
 
+---
 
-🚀 Installation & How to Run
-Prerequisites
-- Node.js ($\ge 18.x$)
-- MongoDB (Local service or MongoDB Atlas cloud URI)
-Local Setup
-1. Clone the repository:
-   git clone <your-repo-url>
-   cd "SMART ROUTE OPTIMIZATION SYSTEM FOR LAST-MILE DELIVERY"
-2. Install backend dependencies:
-   cd backend
-   npm install
-3. Configure Environment Variables:
-   Create a .env file in backend/:
-   PORT=5000
-   MONGODB_URI=mongodb://127.0.0.1:27017/smart_route_db
-   JWT_SECRET=smart_route_secret_key_super_secure_2026
-4. Start the server:
-   node server.js
-5. Open in browser:
-   - Application: http://localhost:5000/login.html
-   - Documentation Portal: http://localhost:5000/docs.html
-🔐 Demo Credentials
-Role	Email	Password	Access Scope
-Fleet Manager / Admin	admin@lastmile.com	admin123	Full access to all 8 modules & settings
-Delivery Driver	rahul@lastmile.com	driver123	Driver task console & delivery execution
+# 👥 User Roles
 
+| Feature | Admin / Fleet Manager | Driver |
+|---|:---:|:---:|
+| Login | ✅ | ✅ |
+| Dashboard | ✅ | ✅ |
+| Create Deliveries | ✅ | ❌ |
+| Edit Deliveries | ✅ | ❌ |
+| Delete Deliveries | ✅ | ❌ |
+| Manage Vehicles | ✅ | ❌ |
+| Manage Drivers | ✅ | ❌ |
+| Optimize Routes | ✅ | ❌ |
+| View Assigned Route | ✅ | ✅ |
+| Update Delivery Status | ✅ | ✅ |
+| Report Delivery Issues | ✅ | ✅ |
+| View Analytics | ✅ | ❌ |
+| Manage Users | ✅ | ❌ |
+| System Configuration | ✅ | ❌ |
 
-🌐 Production Cloud Deployment Guide
-Option A: Vercel (Current Production Deployment)
-- Live Application: https://smart-route-optimization-system-for.vercel.app/login.html
-- Live Documentation: https://smart-route-optimization-system-for.vercel.app/docs.html
-- Environment variables on Vercel:
-  - MONGODB_URI: Your MongoDB Atlas URI
-  - JWT_SECRET: Your production secret
-- The included frontend/js/config.js automatically routes API requests seamlessly.
-Option B: Render (Unified Web Service)
-1. Create a Web Service on Render.
-2. Root directory: backend, Build Command: npm install, Start Command: node server.js.
-3. Render automatically hosts the backend and serves the frontend static files together.
-👨‍💻Academic Project Details
-- Project Title: SMART ROUTE OPTIMIZATION SYSTEM FOR LAST-MILE DELIVERY
-- Domain: Logistics & Supply Chain Engineering / Web Systems
-- Development Lifecycle: Structured 6-Day Agile Development Plan
-- Documentation: Built-in web documentation accessible at /docs.html
+---
 
-## 👨‍💻 Author
+# 🧮 Route Optimization Algorithm
 
-### Madhur Kamble
+The system uses multiple calculations to generate efficient delivery routes.
+
+## 1. Haversine Distance
+
+The Haversine formula calculates geographical distance between two latitude/longitude points.
+
+```text
+Δφ = lat₂ - lat₁
+
+Δλ = lon₂ - lon₁
+
+a = sin²(Δφ/2)
+    + cos(lat₁) × cos(lat₂) × sin²(Δλ/2)
+
+c = 2 × atan2(√a, √(1-a))
+
+Distance = 6371 × c
+```
+
+Distance is calculated in kilometers.
+
+---
+
+## 2. Priority-Based Route Optimization
+
+Urgent deliveries receive higher priority during route planning.
+
+```text
+Effective Distance =
+Raw Distance × Priority Factor
+```
+
+For urgent deliveries:
+
+```text
+Priority Factor = 0.6
+```
+
+For standard deliveries:
+
+```text
+Priority Factor = 1.0
+```
+
+This helps urgent deliveries receive preference during route optimization.
+
+---
+
+## 3. Nearest Neighbor Algorithm
+
+The system uses a **Nearest Neighbor approach** to select the next delivery stop.
+
+Basic process:
+
+```text
+Start from Driver Location
+        ↓
+Find nearest suitable delivery
+        ↓
+Check priority
+        ↓
+Add delivery to route
+        ↓
+Move to selected delivery
+        ↓
+Repeat until all deliveries are completed
+```
+
+---
+
+# 🚦 Traffic-Aware ETA
+
+Traffic conditions affect estimated travel time.
+
+```text
+Effective Speed =
+Base Speed / Traffic Factor
+```
+
+Traffic factors:
+
+```text
+Low Traffic    → 1.0
+Medium Traffic → 1.2
+High Traffic   → 1.5
+```
+
+Driving time:
+
+```text
+Driving Time =
+Distance / Effective Speed × 60
+```
+
+Service time is also added for delivery handovers.
+
+```text
+Total ETA =
+Driving Time + Delivery Service Time
+```
+
+---
+
+# ⛽ Fuel Calculation
+
+Fuel consumption is calculated using:
+
+```text
+Fuel Consumed =
+Total Distance / Vehicle Mileage
+```
+
+Fuel cost:
+
+```text
+Fuel Cost =
+Fuel Consumed × Fuel Price
+```
+
+Cost per delivery:
+
+```text
+Cost Per Delivery =
+Total Fuel Cost / Number of Deliveries
+```
+
+---
+
+# 📊 Route Score
+
+Routes are evaluated using multiple factors:
+
+```text
+Route Score =
+(Distance × 1.5)
++ Traffic Penalty
++ Fuel Cost
+- Priority Bonus
+```
+
+A lower score represents a more efficient route.
+
+---
+
+# 📡 REST API
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/auth/login` | Login user |
+| POST | `/api/auth/register` | Register user |
+| GET | `/api/auth/me` | Get current user |
+| GET | `/api/auth/users` | Get users |
+| POST | `/api/auth/seed-reset` | Restore sample data |
+| GET | `/api/deliveries` | Get deliveries |
+| POST | `/api/deliveries` | Create delivery |
+| PUT | `/api/deliveries/:id/status` | Update delivery status |
+| POST | `/api/deliveries/:id/issue` | Report issue |
+| DELETE | `/api/deliveries/:id` | Delete delivery |
+| GET | `/api/drivers` | Get drivers |
+| POST | `/api/drivers` | Add driver |
+| GET | `/api/vehicles` | Get vehicles |
+| POST | `/api/vehicles` | Add vehicle |
+| GET | `/api/routes/data` | Get route planning data |
+| POST | `/api/routes/preview` | Preview optimized route |
+| POST | `/api/routes/optimize` | Optimize and save route |
+| POST | `/api/routes/:id/recalculate` | Recalculate route |
+| GET | `/api/routes/driver/:driverId` | Get driver's route |
+| GET | `/api/analytics` | Get analytics |
+| GET | `/api/dashboard/summary` | Get dashboard metrics |
+
+---
+
+# 🚀 Installation & Setup
+
+## Prerequisites
+
+Install:
+
+- Node.js 18+
+- MongoDB or MongoDB Atlas
+- Git
+- Web Browser
+
+---
+
+## 1. Clone Repository
+
+```bash
+git clone https://github.com/madhurkamble/SMART-ROUTE-OPTIMIZATION-SYSTEM-FOR-LAST-MILE-DELIVERY.git
+```
+
+Go into the project:
+
+```bash
+cd "SMART ROUTE OPTIMIZATION SYSTEM FOR LAST-MILE DELIVERY"
+```
+
+---
+
+## 2. Install Backend Dependencies
+
+```bash
+cd backend
+npm install
+```
+
+---
+
+## 3. Configure Environment Variables
+
+Create:
+
+```text
+backend/.env
+```
+
+Example:
+
+```env
+PORT=5000
+MONGODB_URI=your_mongodb_connection_string
+SESSION_SECRET=your_secret
+```
+
+> Never commit your `.env` file to GitHub.
+
+---
+
+## 4. Start Backend
+
+```bash
+npm start
+```
+
+The backend will run on:
+
+```text
+http://localhost:5000
+```
+
+---
+
+## 5. Open Application
+
+For local development:
+
+```text
+http://localhost:5000/login.html
+```
+
+If the frontend is served separately:
+
+```text
+http://localhost:<frontend-port>/login.html
+```
+
+---
+
+# 🔐 Demo Credentials
+
+### Admin / Fleet Manager
+
+```text
+Email: admin@lastmile.com
+Password: admin123
+```
+
+### Driver
+
+```text
+Email: rahul@lastmile.com
+Password: driver123
+```
+
+> These credentials are intended for demonstration/testing purposes.
+
+---
+
+# 🌐 Deployment
+
+The project is deployed using **Vercel**.
+
+### Frontend
+
+```text
+https://smart-route-optimization-system-for.vercel.app
+```
+
+### Backend API
+
+```text
+https://smart-route-optimization-backend.vercel.app
+```
+
+### Database
+
+MongoDB Atlas is used for the production database.
+
+---
+
+# 🔄 Production Architecture
+
+```text
+                    USER
+                     │
+                     ▼
+        ┌─────────────────────────┐
+        │   Vercel Frontend       │
+        │ HTML + CSS + JavaScript │
+        └────────────┬────────────┘
+                     │
+                     │ REST API
+                     ▼
+        ┌─────────────────────────┐
+        │   Vercel Backend        │
+        │   Node.js + Express     │
+        └────────────┬────────────┘
+                     │
+                     │ Mongoose
+                     ▼
+        ┌─────────────────────────┐
+        │      MongoDB Atlas      │
+        └─────────────────────────┘
+```
+
+Map services:
+
+```text
+Browser
+   │
+   ▼
+Leaflet.js
+   │
+   ▼
+OpenStreetMap
+```
+
+---
+
+# 🔒 Security
+
+The project includes:
+
+- JWT authentication
+- Password hashing using bcrypt
+- Protected API routes
+- Environment variables
+- CORS configuration
+- Role-based access control
+- MongoDB Atlas authentication
+
+Sensitive information such as database credentials and secrets should always remain inside `.env`.
+
+---
+
+# 🧪 Testing
+
+The application was tested across the major modules:
+
+- Login authentication
+- Dashboard loading
+- Delivery CRUD operations
+- Vehicle management
+- Driver management
+- Route optimization
+- Map rendering
+- Traffic simulation
+- Fuel calculation
+- ETA calculation
+- Delivery status updates
+- Analytics
+- Admin management
+
+---
+
+# 📈 Future Enhancements
+
+Possible future improvements include:
+
+- Real-time GPS tracking
+- Google Maps or Mapbox integration
+- Real traffic API integration
+- Advanced Vehicle Routing Problem algorithms
+- Automatic multi-vehicle route allocation
+- Driver mobile application
+- Push notifications
+- Customer delivery tracking
+- Delivery proof with photo/signature
+- Advanced predictive analytics
+- Cloud-based real-time fleet monitoring
+
+---
+
+# 🎓 Academic Project Details
+
+**Project Title:**  
+Smart Route Optimization System for Last-Mile Delivery
+
+**Domain:**  
+Logistics & Supply Chain / Web Application Development
+
+**Project Type:**  
+Full-Stack Web Application
+
+**Development Approach:**  
+Structured 6-Day Development Plan
+
+**Primary Technologies:**  
+HTML5, CSS3, JavaScript, Node.js, Express.js, MongoDB
+
+---
+
+# 👨‍💻 Author
+
+## Madhur Kamble
 
 **Bachelor of Engineering – Computer Engineering**  
 **Zeal College of Engineering and Research, Pune**
 
-This project was developed as an academic and practical full-stack application to solve real-world challenges in last-mile delivery, fleet management, route optimization, and logistics analytics.
+I developed this project as an academic and practical full-stack application focused on solving real-world challenges in **last-mile delivery, fleet management, route optimization, and logistics analytics**.
 
 ### 🔗 Connect With Me
 
 - 💻 **GitHub:** [github.com/madhurkamble](https://github.com/madhurkamble)
 - 🔗 **LinkedIn:** [linkedin.com/in/madhur-kamble-55911b290](https://www.linkedin.com/in/madhur-kamble-55911b290)
+
+---
+
+# ⭐ Project
+
+If you find this project useful or interesting, feel free to explore the repository and connect with me on GitHub or LinkedIn.
+
+**Built with Node.js, Express.js, MongoDB, HTML, CSS, JavaScript, Leaflet and OpenStreetMap.**
