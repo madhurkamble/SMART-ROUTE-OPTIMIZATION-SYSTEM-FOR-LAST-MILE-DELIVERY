@@ -18,22 +18,37 @@ The system provides **role-based access for Fleet Managers/Admins and Delivery D
 
 ### 👨‍💼 Admin / Fleet Manager
 
-```text
-Admin:
-Email: admin@lastmile.com
-Password: admin123
+# 🚚 Smart Route Optimization System for Last-Mile Delivery
 
-Driver:
-Email: rahul@lastmile.com
-Password: driver123
+A web-based logistics platform that optimizes delivery routes using distance, traffic, fuel efficiency, and delivery priorities. It helps fleet managers manage deliveries, drivers, and vehicles while providing route planning, ETA estimation, monitoring, and analytics.
 
-### 📚 Web Documentation
+---
+
+## 🔐 Demo Credentials
+
+### Admin / Fleet Manager
+- **Email:** `admin@lastmile.com`
+- **Password:** `admin123`
+
+### Driver
+- **Email:** `rahul@lastmile.com`
+- **Password:** `driver123`
+
+---
+
+## 🌐 Live Demo
+
+👉 **[Open Live Application](https://smart-route-optimization-system-for.vercel.app/login.html)**
+
+---
+
+## 📚 Web Documentation
 
 👉 **[View Project Documentation](https://smart-route-optimization-system-for.vercel.app/docs.html)**
 
 ### 📄 Product Requirements Document
 
-[View PRD](./docs/PRD.md)
+👉 **[View PRD](./docs/PRD.md)**
 
 ---
 
@@ -76,7 +91,7 @@ The main objectives of this project are:
 
 # ✨ Key Features
 
-### 🔐 1. Role-Based Authentication
+## 🔐 1. Role-Based Authentication
 
 - Admin/Fleet Manager login
 - Driver login
@@ -84,7 +99,7 @@ The main objectives of this project are:
 - Password hashing using bcrypt
 - Protected API routes
 
-### 📦 2. Delivery Management
+## 📦 2. Delivery Management
 
 - Create deliveries
 - Update deliveries
@@ -95,7 +110,7 @@ The main objectives of this project are:
 - Track delivery status
 - Report delivery issues
 
-### 🚚 3. Fleet Vehicle Management
+## 🚚 3. Fleet Vehicle Management
 
 Manage company fleet vehicles including:
 
@@ -114,7 +129,7 @@ Supported vehicle examples:
 - 🚐 Vans
 - 🚚 Trucks
 
-### 👨‍✈️ 4. Driver Management
+## 👨‍✈️ 4. Driver Management
 
 Fleet managers can:
 
@@ -125,7 +140,7 @@ Fleet managers can:
 - View assigned routes
 - Monitor delivery progress
 
-### 🗺️ 5. Route Optimization
+## 🗺️ 5. Route Optimization
 
 The system provides:
 
@@ -137,7 +152,7 @@ The system provides:
 - Optimized delivery sequence
 - Interactive map visualization
 
-### 🚦 6. Traffic-Aware Routing
+## 🚦 6. Traffic-Aware Routing
 
 The system simulates different traffic levels:
 
@@ -154,7 +169,7 @@ Traffic conditions affect:
 - Route score
 - Delivery planning
 
-### ⛽ 7. Fuel Estimation
+## ⛽ 7. Fuel Estimation
 
 The system calculates:
 
@@ -169,7 +184,7 @@ Based on:
 - Fuel type
 - Fuel price
 
-### 📍 8. Driver Panel
+## 📍 8. Driver Panel
 
 Drivers can:
 
@@ -181,7 +196,7 @@ Drivers can:
 - Report delivery issues
 - Track assigned route
 
-### 📊 9. Analytics Dashboard
+## 📊 9. Analytics Dashboard
 
 The analytics module provides:
 
@@ -189,10 +204,10 @@ The analytics module provides:
 - Completion Rate
 - Vehicle Utilization
 - Planned vs Actual Distance
-- Route performance
-- Delivery performance
+- Route Performance
+- Delivery Performance
 
-### ⚙️ 10. Admin Panel
+## ⚙️ 10. Admin Panel
 
 Administrators can:
 
@@ -225,8 +240,8 @@ Administrators can:
 
 This project intentionally uses:
 
-- HTML
-- CSS
+- HTML5
+- CSS3
 - Vanilla JavaScript
 - Node.js
 - Express.js
@@ -240,18 +255,18 @@ No React, Angular, Vue, or TypeScript is required.
 
 ```text
 ┌─────────────────────────────────────────────────────────────┐
-│                  FRONTEND                                  │
-│             HTML5 + CSS3 + JavaScript                      │
+│                     FRONTEND                               │
+│                HTML5 + CSS3 + JavaScript                  │
 │                                                             │
 │ Login | Dashboard | Deliveries | Vehicles | Route Planner  │
-│ Driver Panel | Analytics | Admin                           │
+│ Driver Panel | Analytics | Admin                          │
 └─────────────────────────────┬───────────────────────────────┘
                               │
                               │ REST API + JWT
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                    BACKEND                                 │
-│                 Node.js + Express.js                       │
+│                      BACKEND                               │
+│                  Node.js + Express.js                      │
 │                                                             │
 │ Authentication                                              │
 │ Delivery Management                                         │
@@ -267,12 +282,11 @@ No React, Angular, Vue, or TypeScript is required.
                               │ Mongoose
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                    DATABASE                                │
-│                    MongoDB                                 │
+│                     DATABASE                               │
+│                       MongoDB                              │
 │                                                             │
 │ Users | Deliveries | Drivers | Vehicles | Routes           │
 └─────────────────────────────────────────────────────────────┘
-```
 
 ---
 
